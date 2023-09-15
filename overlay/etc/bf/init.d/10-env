@@ -1,0 +1,12 @@
+#!/command/with-contenv sh
+
+set -euo pipefail
+export BF_E=`basename ${0}`
+
+
+#======================================================================================================================
+# Set environment variables.
+#======================================================================================================================
+
+bf-env "UNBOUND_CONF" "/etc/unbound/unbound.conf"
+bf-env "UNBOUND_TRUSTED_KEY" "/usr/share/dnssec-root/trusted-key.key"

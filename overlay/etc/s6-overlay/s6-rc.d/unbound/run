@@ -1,0 +1,20 @@
+#!/command/with-contenv sh
+
+set -euo pipefail
+export BF_E="${PWD##*/}/$(basename ${0})"
+
+
+#======================================================================================================================
+# Run Unbound service.
+#======================================================================================================================
+
+[[ ! -f ${UNBOUND_CONF} ]] && bf-error "Unbound configuration file not found."
+
+bf-echo "Updating root anchor."
+unbound-update-root-anchor
+
+bf-echo "Checking Unbound configuration."
+unbound-checkconf ${UNBOUND_CONF}
+
+bf-echo "Starting Unbound in daemon mode."
+unbound -c ${UNBOUND_CONF} -d
