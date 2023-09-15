@@ -27,7 +27,7 @@ bf-echo "Unbound version ${VERSION}."
 
 bf-echo "Installing Unbound v${VERSION}..."
 apk add --no-cache \
-    ldns \
+    drill \
     unbound=${VERSION}
 bf-done
 
