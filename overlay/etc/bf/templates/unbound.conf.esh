@@ -57,7 +57,6 @@ server:
         # interface: 2001:DB8::5
         # interface: eth0@5003
         interface: 127.0.0.1
-        interface: ::1
 
         # enable this feature to copy the source address of queries to reply.
         # Socket options are not supported on all platforms. experimental.
@@ -87,7 +86,7 @@ server:
         prefer-ip6: <%= ${UNBOUND_PREFER_IP6:-no} %>
 
         # Prefer ipv4 upstream servers, even if ipv6 is available.
-        prefer-ip4: <%= ${UNBOUND_PREFER_IP4:-no} %>
+        prefer-ip4: <%= ${UNBOUND_PREFER_IP4:-yes} %>
 
         # number of ports to allocate per thread, determines the size of the
         # port range that can be open simultaneously.  About double the
@@ -243,7 +242,7 @@ server:
         do-ip4: <%= ${UNBOUND_DO_IP4:-yes} %>
 
         # Enable IPv6, "yes" or "no".
-        do-ip6: <%= ${UNBOUND_DO_IP6:-yes} %>
+        do-ip6: <%= ${UNBOUND_DO_IP6:-no} %>
 
         # Enable UDP, "yes" or "no".
         do-udp: <%= ${UNBOUND_DO_UDP:-yes} %>
