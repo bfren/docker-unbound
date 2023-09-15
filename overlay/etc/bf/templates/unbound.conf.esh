@@ -119,7 +119,7 @@ server:
 
         # buffer size for UDP port 53 outgoing (SO_SNDBUF socket option).
         # 0 is system default.  Use 4m to handle spikes on very busy servers.
-        so-sndbuf: <%= ${UNBOUND_SO_SNDBUF:-1M} %>
+        so-sndbuf: <%= ${UNBOUND_SO_SNDBUF:-0} %>
 
         # use SO_REUSEPORT to distribute queries over threads.
         # at extreme load it could be better to turn it off to distribute even.
