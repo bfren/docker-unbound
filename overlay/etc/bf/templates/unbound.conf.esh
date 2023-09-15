@@ -877,7 +877,7 @@ server:
 
         # request upstream over TLS (with plain DNS inside the TLS stream).
         # Default is no.  Can be turned on and off with unbound-control.
-        # tls-upstream: no
+        tls-upstream: <%= UNBOUND_TLS_UPSTREAM:-yes %>
 
         # Certificates used to authenticate connections made upstream.
         # tls-cert-bundle: ""
