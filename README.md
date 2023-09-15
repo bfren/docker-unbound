@@ -9,11 +9,16 @@ Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed
 ## Contents
 
 * [Ports](#ports)
+* [Environment Variables](#environment-variables)
 * [Licence / Copyright](#licence)
 
 ## Ports
 
 * 53
+
+## Environment Variables
+
+You can override various values in Unbound's configuration using environment variables - see /overlay/etc/bf/templates/unbound.conf.esh for details.
 
 ## Licence
 
