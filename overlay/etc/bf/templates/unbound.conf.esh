@@ -880,7 +880,7 @@ server:
         tls-upstream: <%= ${UNBOUND_TLS_UPSTREAM:-yes} %>
 
         # Certificates used to authenticate connections made upstream.
-        # tls-cert-bundle: ""
+        tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
 
         # Add system certs to the cert bundle, from the Windows Cert Store
         # tls-win-cert: no
