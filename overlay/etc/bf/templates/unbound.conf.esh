@@ -325,7 +325,7 @@ server:
         # interface-action: 192.0.2.154@5003 allow
         # interface-action: 2001:DB8::5 allow
         # interface-action: eth0@5003 allow
-        interface-action: 0.0.0.0 action
+        interface-action: 0.0.0.0 allow
 
         # Similar to 'access-control-tag:' but for interfaces.
         # Tag interfaces with a list of tags (in "" with spaces between).
