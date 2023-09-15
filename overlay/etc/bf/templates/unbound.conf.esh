@@ -114,11 +114,11 @@ server:
 
         # buffer size for UDP port 53 incoming (SO_RCVBUF socket option).
         # 0 is system default.  Use 4m to catch query spikes for busy servers.
-        so-rcvbuf: 0
+        # so-rcvbuf: 0
 
         # buffer size for UDP port 53 outgoing (SO_SNDBUF socket option).
         # 0 is system default.  Use 4m to handle spikes on very busy servers.
-        so-sndbuf: 0
+        # so-sndbuf: 0
 
         # use SO_REUSEPORT to distribute queries over threads.
         # at extreme load it could be better to turn it off to distribute even.
@@ -515,7 +515,7 @@ server:
 
         # Aggressive NSEC uses the DNSSEC NSEC chain to synthesize NXDOMAIN
         # and other denials, using information from previous NXDOMAINs answers.
-        # aggressive-nsec: yes
+        aggressive-nsec: <%= ${UNBOUND_AGGRESSIVE_NSEC:-yes} %>
 
         # Use 0x20-encoded random bits in the query to foil spoof attempts.
         # This feature is an experimental implementation of draft dns-0x20.
@@ -557,23 +557,23 @@ server:
 
         # if yes, the above default do-not-query-address entries are present.
         # if no, localhost can be queried (for testing and debugging).
-        # do-not-query-localhost: yes
+        do-not-query-localhost: <%= ${UNBOUND_DO_NOT_QUERY_LOCALHOST:-yes} %>
 
         # if yes, perform prefetching of almost expired message cache entries.
         prefetch: <%= ${UNBOUND_PREFETCH:-yes} %>
 
         # if yes, perform key lookups adjacent to normal lookups.
-        # prefetch-key: no
+        prefetch-key: <%= ${UNBOUND_PREFETCH_KEY:-yes} %>
 
         # deny queries of type ANY with an empty response.
-        deny-any: yes
+        deny-any: <%= ${UNBOUND_DENY_ANY:-yes} %>
 
         # if yes, Unbound rotates RRSet order in response.
         # rrset-roundrobin: yes
 
         # if yes, Unbound doesn't insert authority/additional sections
         # into response messages when those sections are not required.
-        # minimal-responses: yes
+        minimal-responses: <%= ${UNBOUND_MINIMAL_RESPONSES:-yes} %>
 
         # true to disable DNSSEC lameness check in iterator.
         # disable-dnssec-lame-check: no
