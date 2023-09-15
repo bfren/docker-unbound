@@ -5,7 +5,7 @@ export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Attempt to connect to the local Samba server.
+# Attempt to resolve cloudflare.com.
 #======================================================================================================================
 
-drill @127.0.0.1 cloudflare.com || exit 1
+drill @127.0.0.1 cloudflare.com > /dev/null 2>&1 || exit 1
