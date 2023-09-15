@@ -114,11 +114,11 @@ server:
 
         # buffer size for UDP port 53 incoming (SO_RCVBUF socket option).
         # 0 is system default.  Use 4m to catch query spikes for busy servers.
-        so-rcvbuf: <%= ${UNBOUND_SO_RCVBUF:-0} %>
+        so-rcvbuf: 0
 
         # buffer size for UDP port 53 outgoing (SO_SNDBUF socket option).
         # 0 is system default.  Use 4m to handle spikes on very busy servers.
-        so-sndbuf: <%= ${UNBOUND_SO_SNDBUF:-0} %>
+        so-sndbuf: 0
 
         # use SO_REUSEPORT to distribute queries over threads.
         # at extreme load it could be better to turn it off to distribute even.
@@ -293,7 +293,6 @@ server:
         # access-control: 127.0.0.0/8 allow
         # access-control: ::1 allow
         # access-control: ::ffff:127.0.0.1 allow
-        access-control: 0.0.0.0 allow
 
         # tag access-control with list of tags (in "" with spaces between)
         # Clients using this access control element use localzones that
@@ -326,6 +325,7 @@ server:
         # interface-action: 192.0.2.154@5003 allow
         # interface-action: 2001:DB8::5 allow
         # interface-action: eth0@5003 allow
+        interface-action: 0.0.0.0 action
 
         # Similar to 'access-control-tag:' but for interfaces.
         # Tag interfaces with a list of tags (in "" with spaces between).
@@ -439,10 +439,10 @@ server:
         # root-hints: ""
 
         # enable to not answer id.server and hostname.bind queries.
-        # hide-identity: no
+        hide-identity: <%= ${UNBOUND_HIDE_IDENTITY:-yes} %>
 
         # enable to not answer version.server and version.bind queries.
-        # hide-version: no
+        hide-version: <%= ${UNBOUND_HIDE_VERSION:-yes} %>
 
         # enable to not answer trustanchor.unbound queries.
         # hide-trustanchor: no
@@ -474,10 +474,10 @@ server:
         # target-fetch-policy: "3 2 1 0 0"
 
         # Harden against very small EDNS buffer sizes.
-        # harden-short-bufsize: yes
+        harden-short-bufsize: <%= ${UNBOUND_HARDEN_SHORT_BUFSIZE:-yes} %>
 
         # Harden against unseemly large queries.
-        # harden-large-queries: no
+        harden-large-queries: <%= ${UNBOUND_HARDEN_LARGE_QUERIES:-yes} %>
 
         # Harden against out of zone rrsets, to avoid spoofing attempts.
         harden-glue: <%= ${UNBOUND_HARDEN_GLUE:-yes} %>
@@ -489,7 +489,7 @@ server:
         harden-dnssec-stripped: <%= ${UNBOUND_HARDEN_DNS_STRIPPED:-yes} %>
 
         # Harden against queries that fall under dnssec-signed nxdomain names.
-        # harden-below-nxdomain: yes
+        harden-below-nxdomain: <%= ${UNBOUND_HARDEN_BELOW_NXDOMAIN:-yes} %>
 
         # Harden the referral path by performing additional queries for
         # infrastructure data.  Validates the replies (if possible).
@@ -500,12 +500,12 @@ server:
         # Harden against algorithm downgrade when multiple algorithms are
         # advertised in the DS record.  If no, allows the weakest algorithm
         # to validate the zone.
-        # harden-algo-downgrade: no
+        harden-algo-downgrade: <%= ${UNBOUND_HARDEN_ALGO_DOWNGRADE:-yes} %>
 
         # Sent minimum amount of information to upstream servers to enhance
         # privacy. Only sent minimum required labels of the QNAME and set QTYPE
         # to A when possible.
-        # qname-minimisation: yes
+        qname-minimisation: <%= ${UNBOUND_QNAME_MINIMISATION:-yes} %>
 
         # QNAME minimisation in strict mode. Do not fall-back to sending full
         # QNAME to potentially broken nameservers. A lot of domains will not be
@@ -566,7 +566,7 @@ server:
         # prefetch-key: no
 
         # deny queries of type ANY with an empty response.
-        # deny-any: no
+        deny-any: yes
 
         # if yes, Unbound rotates RRSet order in response.
         # rrset-roundrobin: yes
