@@ -4,23 +4,21 @@
 
 [Docker Repository](https://hub.docker.com/r/bfren/unbound) - [bfren ecosystem](https://github.com/bfren/docker)
 
-Comes with Unbound pre-installed.
+Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed.
 
 ## Contents
 
 * [Ports](#ports)
-* [Volumes](#volumes)
+* [Environment Variables](#environment-variables)
 * [Licence / Copyright](#licence)
 
 ## Ports
 
 * 53
 
-## Volumes
+## Environment Variables
 
-| Volume   | Purpose                          |
-| -------- | -------------------------------- |
-| `/files` | Contains the files to be shared. |
+You can override various values in Unbound's configuration using environment variables - see /overlay/etc/bf/templates/unbound.conf.esh for details.
 
 ## Licence
 
