@@ -10,4 +10,4 @@ docker buildx build \
     -t unbound-dev \
     . \
     && \
-    docker run -it -p "127.0.0.1:5353:53" unbound-dev sh
+    docker run -it -p "127.0.0.1:5353:53/udp" unbound-dev sh
