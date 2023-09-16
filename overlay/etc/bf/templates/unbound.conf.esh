@@ -594,7 +594,7 @@ server:
         # And then enable the auto-trust-anchor-file config item.
         # Please note usage of unbound-anchor root anchor is at your own risk
         # and under the terms of our LICENSE (see that file in the source).
-        # auto-trust-anchor-file: ""
+        auto-trust-anchor-file: "<%= ${UNBOUND_TRUSTED_KEY} %>"
 
         # trust anchor signaling sends a RFC8145 key tag query after priming.
         # trust-anchor-signaling: yes
@@ -606,7 +606,7 @@ server:
         # with several entries, one file per entry.
         # Zone file format, with DS and DNSKEY entries.
         # Note this gets out of date, use auto-trust-anchor-file please.
-        trust-anchor-file: "<%= ${UNBOUND_TRUSTED_KEY} %>"
+        # trust-anchor-file: ""
 
         # Trusted key for validation. DS or DNSKEY. specify the RR on a
         # single line, surrounded by "". TTL is ignored. class is IN default.
