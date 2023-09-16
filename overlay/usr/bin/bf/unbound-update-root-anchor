@@ -1,4 +1,4 @@
-#!/command/with-contenv sh
+#!/command/with-contenv bash
 
 set -euo pipefail
 export BF_E=`basename ${0}`
@@ -8,4 +8,4 @@ export BF_E=`basename ${0}`
 # Update root anchor.
 #======================================================================================================================
 
-unbound-anchor -v -a ${UNBOUND_TRUSTED_KEY}
+s6-setuidgid unbound ${UNBOUND_LIB}/update-root-anchor

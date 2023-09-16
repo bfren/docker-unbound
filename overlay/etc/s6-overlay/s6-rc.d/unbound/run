@@ -14,7 +14,7 @@ bf-echo "Updating root anchor."
 unbound-update-root-anchor
 
 bf-echo "Checking Unbound configuration."
-unbound-checkconf ${UNBOUND_CONF}
+unbound-check-conf
 
 bf-echo "Starting Unbound in daemon mode."
-unbound -c ${UNBOUND_CONF} -d
+s6-setuidgid unbound unbound -c ${UNBOUND_CONF} -d

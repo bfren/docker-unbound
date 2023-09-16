@@ -1,15 +1,8 @@
-#!/command/with-contenv sh
-
-set -euo pipefail
-export BF_E=`basename ${0}`
+#!/command/with-contenv bash
 
 
 #======================================================================================================================
-# Generate Unbound config file.
+# Update root anchor.
 #======================================================================================================================
 
-bf-esh \
-    ${BF_TEMPLATES}/unbound.conf.esh \
-    ${UNBOUND_CONF}
-
-bf-ch-apply "${BF_CH}/10-unbound"
+unbound-anchor -v -a ${UNBOUND_TRUSTED_KEY}
