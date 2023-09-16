@@ -448,7 +448,7 @@ server:
         # hide-trustanchor: no
 
         # enable to not set the User-Agent HTTP header.
-        # hide-http-user-agent: no
+        hide-http-user-agent: yes
 
         # the identity to report. Leave "" or default to return hostname.
         # identity: ""
