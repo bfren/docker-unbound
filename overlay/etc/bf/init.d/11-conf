@@ -12,4 +12,4 @@ bf-esh \
     ${BF_TEMPLATES}/unbound.conf.esh \
     ${UNBOUND_CONF}
 
-bf-ch-apply "${BF_CH}/10-unbound"
+bf-ch-apply "${BF_CH_D}/10-unbound"
