@@ -1,16 +1,9 @@
 #
 # Example configuration file.
 #
-# See unbound.conf(5) man page, version 1.17.1.
+# See unbound.conf(5) man page.
 #
-# this is a comment.
-
-# Use this anywhere in the file to include other text into this file.
-#include: "otherfile.conf"
-
-# Use this anywhere in the file to include other text, that explicitly starts a
-# clause, into this file. Text after this directive needs to start a clause.
-#include-toplevel: "otherfile.conf"
+# Some of the hardening settings are taken from https://dnswatch.com/dns-docs/UNBOUND/.
 
 # The server clause sets the main parameters.
 server:
@@ -203,11 +196,11 @@ server:
 
         # the time to live (TTL) value lower bound, in seconds. Default 0.
         # If more than an hour could easily give trouble due to stale data.
-        # cache-min-ttl: 0
+        cache-min-ttl: <%= ${UNBOUND_CACHE_MIN_TTL:-3600} %>
 
         # the time to live (TTL) value cap for RRsets and messages in the
         # cache. Items are not cached for longer. In seconds.
-        # cache-max-ttl: 86400
+        cache-max-ttl: <%= ${UNBOUND_CACHE_MAX_TTL:-86400} %>
 
         # the time to live (TTL) value cap for negative responses in the cache
         # cache-max-negative-ttl: 3600
@@ -436,7 +429,7 @@ server:
 
         # file to read root hints from.
         # get one from https://www.internic.net/domain/named.cache
-        # root-hints: ""
+        root-hints: "<%= ${UNBOUND_ROOT_HINTS} %>"
 
         # enable to not answer id.server and hostname.bind queries.
         hide-identity: <%= ${UNBOUND_HIDE_IDENTITY:-yes} %>
@@ -519,7 +512,7 @@ server:
 
         # Use 0x20-encoded random bits in the query to foil spoof attempts.
         # This feature is an experimental implementation of draft dns-0x20.
-        # use-caps-for-id: no
+        use-caps-for-id: <%= ${UNBOUND_USE_CAPS_FOR_ID:-yes} %>
 
         # Domains (and domains in them) without support for dns-0x20 and
         # the fallback fails because they keep sending different answers.
@@ -594,7 +587,7 @@ server:
         # And then enable the auto-trust-anchor-file config item.
         # Please note usage of unbound-anchor root anchor is at your own risk
         # and under the terms of our LICENSE (see that file in the source).
-        auto-trust-anchor-file: "<%= ${UNBOUND_TRUSTED_KEY} %>"
+        auto-trust-anchor-file: "<%= ${UNBOUND_ROOT_KEY} %>"
 
         # trust anchor signaling sends a RFC8145 key tag query after priming.
         # trust-anchor-signaling: yes
