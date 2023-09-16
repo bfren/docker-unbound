@@ -9,5 +9,5 @@ export BF_E=`basename ${0}`
 #======================================================================================================================
 
 bf-env "UNBOUND_CONF" "/etc/unbound/unbound.conf"
-bf-env "UNBOUND_TRUSTED_KEY" "/usr/share/dnssec-root/trusted-key.key"
+bf-env "UNBOUND_TRUSTED_KEY" "/etc/unbound/root.key"
 bf-env "UNBOUND_LIB" "${BF_LIB}/unbound"
