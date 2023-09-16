@@ -4,7 +4,7 @@
 
 [Docker Repository](https://hub.docker.com/r/bfren/unbound) - [bfren ecosystem](https://github.com/bfren/docker)
 
-Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed.
+Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed and with DNSSEC enabled.
 
 ## Contents
 
