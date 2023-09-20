@@ -12,7 +12,7 @@ services:
         ipv4_address: ${IP_RANGE}.2
 
   secondary:
-    image: bfren/unbound:1.0.4 # suggest updating this pinned version manually after each release
+    image: bfren/unbound:1.0.5 # suggest updating this pinned version manually after each release
     container_name: unbound-backup
     restart: unless-stopped
     environment:
