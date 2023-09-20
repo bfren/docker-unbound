@@ -28,8 +28,8 @@ services:
       - unbound
     restart: unless-stopped
     ports: # port 80 does not need to be exposed or mapped if using a reverse proxy container, simply add this container to its network
-      - "0.0.0.0:53:53/tcp"
-      - "0.0.0.0:53:53/udp"
+      - "53:53/tcp"
+      - "53:53/udp"
     environment:
       - TZ=${TIMEZONE}
       - VIRTUAL_HOST=${PIHOLE_HOST}
