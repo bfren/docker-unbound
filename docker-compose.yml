@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  primary:
+    image: bfren/unbound:latest
+    container_name: unbound
+    restart: unless-stopped
+    environment:
+      - TZ=${TIMEZONE}
+    networks:
+      dns:
+        ipv4_address: ${IP_RANGE}.2
+
+  secondary:
+    image: bfren/unbound:1.0.4 # suggest updating this pinned version manually after each release
+    container_name: unbound-backup
+    restart: unless-stopped
+    environment:
+      - TZ=${TIMEZONE}
+    networks:
+      dns:
+        ipv4_address: ${IP_RANGE}.200
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    depends_on:
+      - unbound
+    restart: unless-stopped
+    ports: # port 80 does not need to be exposed or mapped if using a reverse proxy container, simply add this container to its network
+      - "0.0.0.0:53:53/tcp"
+      - "0.0.0.0:53:53/udp"
+    environment:
+      - TZ=${TIMEZONE}
+      - VIRTUAL_HOST=${PIHOLE_HOST}
+      - WEBPASSWORD=${PIHOLE_ADMIN_PASSWORD}
+    volumes:
+      - ./v/pihole:/etc/pihole
+      - ./v/dnsmasq:/etc/dnsmasq.d
+    networks:
+      dns:
+        ipv4_address: ${IP_RANGE}.3
+      proxy: # connect this container to the reverse proxy network so it can access pi-hole as http://pihole
+
+networks:
+  dns:
+    name: dns
+    ipam:
+      driver: default
+      config:
+        - subnet: ${IP_RANGE}.0/16
+  proxy:
+    external: true
