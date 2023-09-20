@@ -1,7 +1,25 @@
 version: "3.8"
 
-x-unbound-env: &env
+#======================================================================================================================
+# Restart policy.
+#======================================================================================================================
+x-restart: &restart
+  restart: unless-stopped
+
+#======================================================================================================================
+# Environment variables shared with each container.
+#======================================================================================================================
+x-common-env: &common
   TZ: ${TIMEZONE}
+
+#======================================================================================================================
+# Unbound environment variables.
+#  - commented variables contain unbound's default values
+#  - uncommented variables are my suggested overrides
+# Remove section entirely to leave everything as default with DNSSEC disabled.
+#======================================================================================================================
+x-unbound-env: &unbound
+  UNBOUND_ENABLE_DNSSEC: 1
   #UNBOUND_VERBOSITY: 1
   #UNBOUND_STATISTICS_INTERVAL: 0
   #UNBOUND_SHM_ENABLE: no
@@ -12,7 +30,7 @@ x-unbound-env: &env
   #UNBOUND_NUM_THREADS: 1
   #UNBOUND_INTERFACE_AUTOMATIC: no
   #UNBOUND_PREFER_IP6: no
-  UNBOUND_PREFER_IP4: yes
+  #UNBOUND_PREFER_IP4: no
   #UNBOUND_OUTGOING_NUM_TCP: 10
   #UNBOUND_INCOMING_NUM_TCP: 10
   #UNBOUND_EDNS_BUFFER_SIZE: 1232
@@ -20,7 +38,7 @@ x-unbound-env: &env
   UNBOUND_CACHE_MIN_TTL: 3600
   #UNBOUND_CACHE_MAX_TTL: 86400
   #UNBOUND_DO_IP4: yes
-  UNBOUND_DO_IP6: no
+  #UNBOUND_DO_IP6: yes
   #UNBOUND_DO_UDP: yes
   #UNBOUND_DO_TCP: yes
   UNBOUND_HIDE_IDENTITY: yes
@@ -41,23 +59,36 @@ x-unbound-env: &env
   UNBOUND_DENY_ANY: yes
   #UNBOUND_MINIMAL_RESPONSES: yes
 
+#======================================================================================================================
+# Pi-hole environment variables.
+#======================================================================================================================
+x-pihole-env: &pihole
+  VIRTUAL_HOST: ${PIHOLE_HOST}
+  WEBPASSWORD: ${PIHOLE_ADMIN_PASSWORD}
+  PIHOLE_DNS_: unbound;unbound-backup
+
+#======================================================================================================================
+# Services definition.
+#======================================================================================================================
 services:
   unbound:
     image: bfren/unbound:latest
     container_name: unbound
-    restart: unless-stopped
+    <<: *restart
     environment:
-      <<: *env
+      <<: *common
+      <<: *unbound
     networks:
       dns:
         ipv4_address: ${IP_RANGE}.2
 
   unbound-backup:
-    image: bfren/unbound:1.0.5 # suggest updating this pinned version manually after each release
+    image: bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
     container_name: unbound-backup
-    restart: unless-stopped
+    <<: *restart
     environment:
-      <<: *env
+      <<: *common
+      <<: *unbound
     networks:
       dns:
         ipv4_address: ${IP_RANGE}.200
@@ -68,15 +99,13 @@ services:
     depends_on:
       - unbound
       - unbound-backup
-    restart: unless-stopped
+    <<: *restart
     ports: # port 80 does not need to be exposed or mapped if using a reverse proxy container, simply add this container to its network
       - "53:53/tcp"
       - "53:53/udp"
     environment:
-      - TZ=${TIMEZONE}
-      - VIRTUAL_HOST=${PIHOLE_HOST}
-      - WEBPASSWORD=${PIHOLE_ADMIN_PASSWORD}
-      - PIHOLE_DNS_=unbound;unbound-backup
+      <<: *common
+      <<: *pihole
     volumes:
       - ./v/pihole:/etc/pihole
       - ./v/dnsmasq:/etc/dnsmasq.d

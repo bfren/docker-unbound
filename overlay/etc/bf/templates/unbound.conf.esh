@@ -429,7 +429,7 @@ server:
 
         # file to read root hints from.
         # get one from https://www.internic.net/domain/named.cache
-        root-hints: "<%= ${UNBOUND_ROOT_HINTS} %>"
+        root-hints: "<%= ${UNBOUND_ROOT_HINTS:-} %>"
 
         # enable to not answer id.server and hostname.bind queries.
         hide-identity: <%= ${UNBOUND_HIDE_IDENTITY:-no} %>
@@ -587,7 +587,7 @@ server:
         # And then enable the auto-trust-anchor-file config item.
         # Please note usage of unbound-anchor root anchor is at your own risk
         # and under the terms of our LICENSE (see that file in the source).
-        auto-trust-anchor-file: "<%= ${UNBOUND_ROOT_KEY} %>"
+        auto-trust-anchor-file: "<%= ${UNBOUND_ROOT_KEY:-} %>"
 
         # trust anchor signaling sends a RFC8145 key tag query after priming.
         # trust-anchor-signaling: yes

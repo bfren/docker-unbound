@@ -5,4 +5,8 @@
 # Update root anchor.
 #======================================================================================================================
 
-unbound-anchor -v -a ${UNBOUND_ROOT_KEY}
+if [ "${UNBOUND_ENABLE_DNSSEC:-}" = "1" ] ; then
+    unbound-anchor -v -a ${UNBOUND_ROOT_KEY}
+else
+    bf-notok "DNSSEC is disabled."
+fi

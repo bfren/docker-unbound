@@ -10,7 +10,7 @@ export BF_E="${PWD##*/}/$(basename ${0})"
 
 [[ ! -f ${UNBOUND_CONF} ]] && bf-error "Unbound configuration file not found."
 
-bf-echo "Updating root anchor."
+bf-echo "Updating root anchor (if DNSSEC is enabled)."
 unbound-update-root-anchor
 
 bf-echo "Checking Unbound configuration."
