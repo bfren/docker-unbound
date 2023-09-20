@@ -68,6 +68,16 @@ x-pihole-env: &pihole
   PIHOLE_DNS_: unbound;unbound-backup
 
 #======================================================================================================================
+# Proxy server environment variables.
+#======================================================================================================================
+x-proxy-env: &proxy
+  PROXY_DOMAIN: ${PROXY_DOMAIN}
+  PROXY_LETS_ENCRYPT_EMAIL: ${PROXY_LETS_ENCRYPT_EMAIL}
+  PROXY_LETS_ENCRYPT_LIVE: ${PROXY_LETS_ENCRYPT_LIVE}
+  PROXY_AUTO_PRIMARY: ${PIHOLE_DOMAIN}
+  PROXY_AUTO_UPSTREAM: http://pihole
+
+#======================================================================================================================
 # Services definition.
 #======================================================================================================================
 services:
@@ -103,7 +113,6 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "80:80/tcp" # this exposes port 80 - you should only do this on a local network or behind a reverse proxy
     environment:
       <<: *common
       <<: *pihole
@@ -113,6 +122,25 @@ services:
     networks:
       dns:
         ipv4_address: ${IP_RANGE}.3
+
+  proxy:
+    image: bfren/nginx-proxy:7
+    container_name: proxy
+    depends_on:
+      - pihole
+    <<: *restart
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      <<: *common
+      <<: *proxy
+    volumes:
+      - ./v/sites:/sites
+      - ./v/ssl:/ssl
+    networks:
+      dns:
+        ipv4_address: ${IP_RANGE}.4
 
 networks:
   dns:

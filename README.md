@@ -6,7 +6,7 @@
 
 Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed and with DNSSEC enabled.
 
-See sample `.env` and `docker-compose.yml` files for usage.  Or run as:
+See sample `.env` and `docker-compose.yml` files for usage (plus `-with-proxy` files).  Or run as:
 
 ```bash
 docker run \
