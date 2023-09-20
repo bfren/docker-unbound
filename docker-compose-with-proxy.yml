@@ -86,8 +86,7 @@ services:
     container_name: unbound
     <<: *restart
     environment:
-      <<: *common
-      <<: *unbound
+      <<: [*common, *unbound]
     networks:
       dns:
         ipv4_address: ${IP_RANGE}.2
@@ -97,8 +96,7 @@ services:
     container_name: unbound-backup
     <<: *restart
     environment:
-      <<: *common
-      <<: *unbound
+      <<: [*common, *unbound]
     networks:
       dns:
         ipv4_address: ${IP_RANGE}.200
@@ -114,8 +112,7 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
     environment:
-      <<: *common
-      <<: *pihole
+      <<: [*common, *pihole]
     volumes:
       - ./v/pihole:/etc/pihole
       - ./v/dnsmasq:/etc/dnsmasq.d
@@ -133,8 +130,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      <<: *common
-      <<: *proxy
+      <<: [*common, *proxy]
     volumes:
       - ./v/sites:/sites
       - ./v/ssl:/ssl
