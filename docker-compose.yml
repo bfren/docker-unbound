@@ -35,7 +35,7 @@ services:
       - TZ=${TIMEZONE}
       - VIRTUAL_HOST=${PIHOLE_HOST}
       - WEBPASSWORD=${PIHOLE_ADMIN_PASSWORD}
-      - PIHOLE_DNS_=${IP_RANGE}.2;${IP_RANGE}.200
+      - PIHOLE_DNS_=unbound;unbound-backup
     volumes:
       - ./v/pihole:/etc/pihole
       - ./v/dnsmasq:/etc/dnsmasq.d
