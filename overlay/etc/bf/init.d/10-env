@@ -9,7 +9,10 @@ export BF_E=`basename ${0}`
 #======================================================================================================================
 
 bf-env "UNBOUND_CONF" "/etc/unbound/unbound.conf"
-bf-env "UNBOUND_ROOT_HINTS" "/etc/unbound/root.hints"
-bf-env "UNBOUND_ROOT_KEY" "/etc/unbound/root.key"
+
+if [ "${UNBOUND_ENABLE_DNSSEC:-}" = "1" ] ; then
+    bf-env "UNBOUND_ROOT_HINTS" "/etc/unbound/root.hints"
+    bf-env "UNBOUND_ROOT_KEY" "/etc/unbound/root.key"
+fi
 
 bf-env "UNBOUND_LIB" "${BF_LIB}/unbound"
