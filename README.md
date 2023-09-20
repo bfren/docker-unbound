@@ -6,6 +6,18 @@
 
 Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed and with DNSSEC enabled.
 
+See sample `.env` and `docker-compose.yml` files for usage.  Or run as:
+
+```bash
+docker run \
+    --name=unbound \
+    --detach=true \
+    --publish=53:53/tcp \
+    --publish=53:53/udp \
+    --restart=unless-stopped \
+    bfren/unbound:latest
+```
+
 ## Contents
 
 * [Ports](#ports)
