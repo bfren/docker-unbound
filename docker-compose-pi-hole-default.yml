@@ -1,0 +1,124 @@
+version: "3.8"
+
+#======================================================================================================================
+# Restart policy.
+#======================================================================================================================
+x-restart: &restart
+  restart: unless-stopped
+
+#======================================================================================================================
+# Environment variables shared with each container.
+#======================================================================================================================
+x-common-env: &common
+  TZ: ${TIMEZONE}
+
+#======================================================================================================================
+# Unbound environment variables.
+#  - commented variables contain unbound's default values
+#  - uncommented variables are my suggested overrides
+# Remove section entirely to leave everything as default with DNSSEC disabled.
+#======================================================================================================================
+x-unbound-env: &unbound
+  #UNBOUND_ENABLE_DNSSEC: 1
+  UNBOUND_VERBOSITY: 0
+  #UNBOUND_STATISTICS_INTERVAL: 0
+  #UNBOUND_SHM_ENABLE: no
+  #UNBOUND_SHM_KEY: 11777
+  #UNBOUND_STATISTICS_CUMULATIVE: no
+  #UNBOUND_EXTENDED_STATISTICS: no
+  #UNBOUND_STATISTICS_INHIBIT_ZERO: yes
+  UNBOUND_NUM_THREADS: 1
+  #UNBOUND_PORT: 53
+  #UNBOUND_INTERFACE_AUTOMATIC: no
+  #UNBOUND_PREFER_IP6: no
+  #UNBOUND_PREFER_IP4: no
+  #UNBOUND_OUTGOING_NUM_TCP: 10
+  #UNBOUND_INCOMING_NUM_TCP: 10
+  UNBOUND_SO_RCVBUF: 1m
+  #UNBOUND_SO_SNDBUF: 0
+  UNBOUND_EDNS_BUFFER_SIZE: 1232
+  #UNBOUND_MAX_UDP_SIZE: 4096
+  #UNBOUND_CACHE_MIN_TTL: 0
+  #UNBOUND_CACHE_MAX_TTL: 86400
+  #UNBOUND_DO_IP4: yes
+  UNBOUND_DO_IP6: no
+  #UNBOUND_DO_UDP: yes
+  #UNBOUND_DO_TCP: yes
+  #UNBOUND_HIDE_IDENTITY: no
+  #UNBOUND_HIDE_VERSION: no
+  #UNBOUND_HIDE_HTTP_USER_AGENT: no
+  #UNBOUND_HARDEN_SHORT_BUFSIZE: yes
+  #UNBOUND_HARDEN_LARGE_QUERIES: no
+  UNBOUND_HARDEN_GLUE: yes
+  UNBOUND_HARDEN_DNS_STRIPPED: yes
+  #UNBOUND_HARDEN_BELOW_NXDOMAIN: no
+  #UNBOUND_HARDEN_ALGO_DOWNGRADE: no
+  #UNBOUND_QNAME_MINIMISATION: yes
+  #UNBOUND_AGGRESSIVE_NSEC: yes
+  UNBOUND_USE_CAPS_FOR_ID: no
+  UNBOUND_PRIVATE_ADDRESS_ENABLE: 1
+  #UNBOUND_DO_NOT_QUERY_LOCALHOST: yes
+  #UNBOUND_PREFETCH: no
+  #UNBOUND_PREFETCH_KEY: no
+  #UNBOUND_DENY_ANY: no
+  #UNBOUND_MINIMAL_RESPONSES: yes
+
+#======================================================================================================================
+# Pi-hole environment variables.
+#======================================================================================================================
+x-pihole-env: &pihole
+  VIRTUAL_HOST: ${PIHOLE_HOST_NAME}
+  WEBPASSWORD: ${PIHOLE_ADMIN_PASSWORD}
+  PIHOLE_DNS_: unbound;unbound-backup
+
+#======================================================================================================================
+# Services definition.
+#======================================================================================================================
+services:
+  unbound:
+    image: bfren/unbound:latest
+    container_name: unbound
+    <<: *restart
+    environment:
+      <<: [*common, *unbound]
+    networks:
+      dns:
+        ipv4_address: ${IP_RANGE}.2
+
+  unbound-backup:
+    image: bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
+    container_name: unbound-backup
+    <<: *restart
+    environment:
+      <<: [*common, *unbound]
+    networks:
+      dns:
+        ipv4_address: ${IP_RANGE}.200
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    depends_on:
+      - unbound
+      - unbound-backup
+    <<: *restart
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp" # this exposes port 80 - you should only do this on a local network or behind a reverse proxy
+    environment:
+      <<: [*common, *pihole]
+    volumes:
+      - ./v/pihole:/etc/pihole
+      - ./v/dnsmasq:/etc/dnsmasq.d
+    networks:
+      dns:
+        ipv4_address: ${IP_RANGE}.3
+
+networks:
+  dns:
+    name: dns
+    ipam:
+      driver: default
+      config:
+        - subnet: ${IP_RANGE}.0/16
