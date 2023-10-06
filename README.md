@@ -4,7 +4,7 @@
 
 [Docker Repository](https://hub.docker.com/r/bfren/unbound) - [bfren ecosystem](https://github.com/bfren/docker)
 
-Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed and with DNSSEC enabled.
+Comes with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) pre-installed.
 
 See sample `.env` and `docker-compose.yml` files for usage (plus `-with-proxy` files).  Or run as:
 
@@ -12,6 +12,7 @@ See sample `.env` and `docker-compose.yml` files for usage (plus `-with-proxy` f
 docker run \
     --name=unbound \
     --detach=true \
+    --env UNBOUND_ENABLE_DNSSEC=1 \
     --publish=53:53/tcp \
     --publish=53:53/udp \
     --restart=unless-stopped \
@@ -22,6 +23,7 @@ docker run \
 
 * [Ports](#ports)
 * [Environment Variables](#environment-variables)
+* [Helper Functions](#helper-functions)
 * [Licence / Copyright](#licence)
 
 ## Ports
@@ -31,6 +33,13 @@ docker run \
 ## Environment Variables
 
 You can override various values in Unbound's configuration using environment variables - see /overlay/etc/bf/templates/unbound.conf.esh for details.
+
+## Helper Functions
+
+| Function                      | Arguments | Description                                           |
+| ----------------------------- | --------- | ----------------------------------------------------- |
+| `unbound-check-conf`          | *None*    | Verify Unbound's current configuration.               |
+| `unbound-update-root-anchor`  | *None*    | Use `unbound-anchor` to update root key for DNSSEC.   |
 
 ## Licence
 

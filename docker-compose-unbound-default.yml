@@ -13,32 +13,30 @@ x-common-env: &common
   TZ: ${TIMEZONE}
 
 #======================================================================================================================
-# Unbound environment variables.
-#  - commented variables contain Unbound's default values
-#  - uncommented variables are my suggested overrides
+# Unbound environment variables with their default values.
 #======================================================================================================================
 x-unbound-env: &unbound
-  UNBOUND_ENABLE_DNSSEC: 1
+  #UNBOUND_ENABLE_DNSSEC: 0
   #UNBOUND_AGGRESSIVE_NSEC: yes
   #UNBOUND_CACHE_MAX_TTL: 86400
-  UNBOUND_CACHE_MIN_TTL: 3600
-  UNBOUND_DENY_ANY: yes
+  #UNBOUND_CACHE_MIN_TTL: 0
+  #UNBOUND_DENY_ANY: no
   #UNBOUND_DO_IP4: yes
-  UNBOUND_DO_IP6: no
+  #UNBOUND_DO_IP6: yes
   #UNBOUND_DO_NOT_QUERY_LOCALHOST: yes
   #UNBOUND_DO_TCP: yes
   #UNBOUND_DO_UDP: yes
   #UNBOUND_EDNS_BUFFER_SIZE: 1232
   #UNBOUND_EXTENDED_STATISTICS: no
-  UNBOUND_HARDEN_ALGO_DOWNGRADE: yes
-  UNBOUND_HARDEN_BELOW_NXDOMAIN: yes
-  UNBOUND_HARDEN_DNS_STRIPPED: yes
+  #UNBOUND_HARDEN_ALGO_DOWNGRADE: no
+  #UNBOUND_HARDEN_BELOW_NXDOMAIN: no
+  #UNBOUND_HARDEN_DNS_STRIPPED: no
   #UNBOUND_HARDEN_GLUE: yes
-  UNBOUND_HARDEN_LARGE_QUERIES: yes
+  #UNBOUND_HARDEN_LARGE_QUERIES: no
   #UNBOUND_HARDEN_SHORT_BUFSIZE: yes
-  UNBOUND_HIDE_HTTP_USER_AGENT: yes
-  UNBOUND_HIDE_IDENTITY: yes
-  UNBOUND_HIDE_VERSION: yes
+  #UNBOUND_HIDE_HTTP_USER_AGENT: no
+  #UNBOUND_HIDE_IDENTITY: no
+  #UNBOUND_HIDE_VERSION: no
   #UNBOUND_INCOMING_NUM_TCP: 10
   #UNBOUND_INTERFACE_AUTOMATIC: no
   #UNBOUND_MAX_UDP_SIZE: 4096
@@ -47,9 +45,9 @@ x-unbound-env: &unbound
   #UNBOUND_OUTGOING_NUM_TCP: 10
   #UNBOUND_PREFER_IP4: no
   #UNBOUND_PREFER_IP6: no
-  UNBOUND_PREFETCH_KEY: yes
-  UNBOUND_PREFETCH: yes
-  UNBOUND_PRIVATE_ADDRESS_ENABLE: 1
+  #UNBOUND_PREFETCH_KEY: no
+  #UNBOUND_PREFETCH: no
+  #UNBOUND_PRIVATE_ADDRESS_ENABLE: 0
   #UNBOUND_QNAME_MINIMISATION: yes
   #UNBOUND_SHM_ENABLE: no
   #UNBOUND_SHM_KEY: 11777
@@ -58,7 +56,7 @@ x-unbound-env: &unbound
   #UNBOUND_STATISTICS_CUMULATIVE: no
   #UNBOUND_STATISTICS_INHIBIT_ZERO: yes
   #UNBOUND_STATISTICS_INTERVAL: 0
-  UNBOUND_USE_CAPS_FOR_ID: yes
+  #UNBOUND_USE_CAPS_FOR_ID: no
   #UNBOUND_VERBOSITY: 1
 
 #======================================================================================================================

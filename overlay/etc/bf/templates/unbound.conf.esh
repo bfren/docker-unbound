@@ -107,11 +107,11 @@ server:
 
         # buffer size for UDP port 53 incoming (SO_RCVBUF socket option).
         # 0 is system default.  Use 4m to catch query spikes for busy servers.
-        # so-rcvbuf: 0
+        so-rcvbuf: <%= ${UNBOUND_SO_RCVBUF:-0} %>
 
         # buffer size for UDP port 53 outgoing (SO_SNDBUF socket option).
         # 0 is system default.  Use 4m to handle spikes on very busy servers.
-        # so-sndbuf: 0
+        so-sndbuf: <%= ${UNBOUND_SO_SNDBUF:-0} %>
 
         # use SO_REUSEPORT to distribute queries over threads.
         # at extreme load it could be better to turn it off to distribute even.
@@ -524,13 +524,23 @@ server:
         # Protects against 'DNS Rebinding' (uses browser as network proxy).
         # Only 'private-domain' and 'local-data' names are allowed to have
         # these private addresses. No default.
-        # private-address: 10.0.0.0/8
-        # private-address: 172.16.0.0/12
-        # private-address: 192.168.0.0/16
-        # private-address: 169.254.0.0/16
-        # private-address: fd00::/8
-        # private-address: fe80::/10
-        # private-address: ::ffff:0:0/96
+<% if [ "${UNBOUND_PRIVATE_ADDRESS_ENABLE:-}" = "1" ] ; then -%>
+        private-address: 10.0.0.0/8
+        private-address: 172.16.0.0/12
+        private-address: 192.168.0.0/16
+        private-address: 169.254.0.0/16
+        private-address: fd00::/8
+        private-address: fe80::/10
+        private-address: ::ffff:0:0/96
+<% else -%>
+        #private-address: 10.0.0.0/8
+        #private-address: 172.16.0.0/12
+        #private-address: 192.168.0.0/16
+        #private-address: 169.254.0.0/16
+        #private-address: fd00::/8
+        #private-address: fe80::/10
+        #private-address: ::ffff:0:0/96
+<% fi -%>
 
         # Allow the domain (and its subdomains) to contain private addresses.
         # local-data statements are allowed to contain private addresses too.
