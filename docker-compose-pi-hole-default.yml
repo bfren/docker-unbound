@@ -14,7 +14,7 @@ x-common-env: &common
 
 #======================================================================================================================
 # Unbound environment variables.
-#  - commented variables contain unbound's default values
+#  - commented variables contain Unbound's default values
 #  - uncommented variables are Pi-Hole's suggested overrides (see https://docs.pi-hole.net/guides/dns/unbound/)
 #======================================================================================================================
 x-unbound-env: &unbound
@@ -70,7 +70,7 @@ x-pihole-env: &pihole
   WEBPASSWORD: ${PIHOLE_ADMIN_PASSWORD}
 
 #======================================================================================================================
-# Services definition.
+# Service definitions.
 #======================================================================================================================
 services:
   unbound:

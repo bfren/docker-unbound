@@ -14,9 +14,8 @@ x-common-env: &common
 
 #======================================================================================================================
 # Unbound environment variables.
-#  - commented variables contain unbound's default values
+#  - commented variables contain Unbound's default values
 #  - uncommented variables are my suggested overrides
-# Remove section entirely to leave everything as default with DNSSEC disabled.
 #======================================================================================================================
 x-unbound-env: &unbound
   UNBOUND_ENABLE_DNSSEC: 1
@@ -71,7 +70,7 @@ x-pihole-env: &pihole
   WEBPASSWORD: ${PIHOLE_ADMIN_PASSWORD}
 
 #======================================================================================================================
-# Services definition.
+# Service definitions.
 #======================================================================================================================
 services:
   unbound:
