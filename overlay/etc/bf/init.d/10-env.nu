@@ -2,7 +2,7 @@ use bf
 bf env load -e
 
 # Set environment variables
-def-env main [] {
+def main [] {
     bf env UNBOUND_CONF "/etc/unbound/unbound.conf"
 
     if (bf env check UNBOUND_ENABLE_DNSSEC) {
