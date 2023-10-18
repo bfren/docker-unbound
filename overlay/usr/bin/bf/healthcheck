@@ -1,11 +1,7 @@
-#!/command/with-contenv sh
+#!/usr/bin/nu-env
 
-set -euo pipefail
-export BF_E=`basename ${0}`
+use s6
+s6 env set_executable
 
-
-#======================================================================================================================
-# Attempt to resolve cloudflare.com.
-#======================================================================================================================
-
-drill @127.0.0.1 cloudflare.com > /dev/null 2>&1 || exit 1
+# Attempt to load DNS for cloudflare.com
+def main [] { drill cloudflare.com @127.0.0.1 | complete | exit $in.exit_code }

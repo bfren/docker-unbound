@@ -1,4 +1,4 @@
-FROM bfren/alpine-s6:alpine3.18-4.5.9
+FROM bfren/alpine-s6:alpine3.18-5.0.0-beta
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-unbound"
 

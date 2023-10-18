@@ -1,20 +1,20 @@
-#!/command/with-contenv sh
+#!/usr/bin/nu-env
 
-set -euo pipefail
-export BF_E="${PWD##*/}/$(basename ${0})"
+use bf
+use s6
+use unbound
+s6 env set_executable unbound
 
+# Start Unbound daemon
+def main [...args] {
 
-#======================================================================================================================
-# Run Unbound service.
-#======================================================================================================================
+    bf env show
 
-[[ ! -f ${UNBOUND_CONF} ]] && bf-error "Unbound configuration file not found."
+    # pre-flight checks
+    unbound update anchor
+    unbound check conf
 
-bf-echo "Updating root anchor (if DNSSEC is enabled)."
-unbound-update-root-anchor
-
-bf-echo "Checking Unbound configuration."
-unbound-check-conf
-
-bf-echo "Starting Unbound in daemon mode."
-s6-setuidgid unbound unbound -c ${UNBOUND_CONF} -d
+    # start Unbound
+    bf write "Starting Unbound in daemon mode."
+    s6-setuidgid unbound unbound -c (bf env req UNBOUND_CONF) -d
+}
