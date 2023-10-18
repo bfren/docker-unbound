@@ -1,7 +1,19 @@
 #!/usr/bin/nu-env
 
+use bf
 use bf-s6
 bf-s6 env set_executable
 
-# Attempt to load DNS for cloudflare.com
-def main [] { drill cloudflare.com @127.0.0.1 | complete | exit $in.exit_code }
+# Attempt to load DNS for this domain
+const domain = "cloudflare.com"
+
+# Attempt to load DNS for $domain
+def main [] {
+    bf write debug $"Requesting DNS for ($domain)."
+
+    # capture output of drill executable
+    let result = do { drill $domain @127.0.0.1 } | complete
+    if $result.exit_code > 0 {
+        bf write error --code $result.exit_code ($result.stderr | str trim)
+    }
+}
