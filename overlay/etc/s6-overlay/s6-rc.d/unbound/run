@@ -1,9 +1,8 @@
-#!/usr/bin/nu-env
+#!/usr/bin/nu
 
 use bf
-use bf-s6
 use bf-unbound
-bf-s6 env set_executable unbound
+bf env load -e unbound
 
 # Start Unbound daemon
 def main [...args] {

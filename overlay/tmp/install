@@ -11,9 +11,9 @@ def main [] {
     cd /tmp
     let version = bf fs read ./UNBOUND_BUILD
     bf write $"Installing Unbound ($version)."
-    apk add --no-cache $"unbound=($version)" out> ignore
+    do { apk add --no-cache $"unbound=($version)" } | ignore
 
     # install additional packages
     bf write "Installing additional packages"
-    apk add --no-cache drill out> ignore
+    do { apk add --no-cache drill } | ignore
 }

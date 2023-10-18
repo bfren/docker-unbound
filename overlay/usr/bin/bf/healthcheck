@@ -1,8 +1,7 @@
-#!/usr/bin/nu-env
+#!/usr/bin/nu
 
 use bf
-use bf-s6
-bf-s6 env set_executable
+bf env load -e
 
 # Attempt to load DNS for this domain
 const domain = "cloudflare.com"

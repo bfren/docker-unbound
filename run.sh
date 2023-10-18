@@ -10,4 +10,4 @@ docker buildx build \
     -t unbound-dev \
     . \
     && \
-    docker run -it -e BF_DEBUG=1 -e BF_UNBOUND_ENABLE_DNSSEC=1 -p "127.0.0.1:5353:53/udp" unbound-dev nu-env
+    docker run -it -e BF_DEBUG=1 -e BF_UNBOUND_ENABLE_DNSSEC=1 -p "127.0.0.1:5353:53/udp" unbound-dev sh

@@ -1,7 +1,8 @@
-#!/usr/bin/nu-env
+#!/usr/bin/nu
 
+use bf
 use bf-s6
-bf-s6 env set_executable unbound
+bf env load -e unbound
 
 # Show helpful log message
 def main [...args] { bf-s6 svc finish --terminate }

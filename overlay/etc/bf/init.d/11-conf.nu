@@ -1,6 +1,5 @@
 use bf
-use bf-s6
-bf-s6 env set_executable
+bf env load -e
 
 # Generate Unbound configuration file and apply permissions
 def main [] {
