@@ -1,18 +1,15 @@
 #!/usr/bin/nu-env
 
 use bf
-use s6
-use unbound
-s6 env set_executable unbound
+use bf-s6
+use bf-unbound
+bf-s6 env set_executable unbound
 
 # Start Unbound daemon
 def main [...args] {
-
-    bf env show
-
     # pre-flight checks
-    unbound update anchor
-    unbound check conf
+    bf-unbound update anchor
+    bf-unbound check conf
 
     # start Unbound
     bf write "Starting Unbound in daemon mode."
