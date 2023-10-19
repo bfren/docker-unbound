@@ -2,7 +2,7 @@
 
 use bf
 use bf-unbound
-bf env load -e unbound
+bf env load -x unbound
 
 # Start Unbound daemon
 def main [...args] {

@@ -1,5 +1,5 @@
 use bf
-bf env load -e
+bf env load -x
 
 # Generate Unbound configuration file and apply permissions
 def main [] {
