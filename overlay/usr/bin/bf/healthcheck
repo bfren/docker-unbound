@@ -1,13 +1,12 @@
 #!/usr/bin/nu
 
 use bf
-bf env load -e
-
-# Attempt to load DNS for this domain
-const domain = "cloudflare.com"
+bf env load -x
 
 # Attempt to load DNS for $domain
-def main [] {
+def main [
+    domain: string = "cloudflare.com"   # Te domain to load
+] {
     bf write debug $"Requesting DNS for ($domain)."
 
     # capture output of drill executable
