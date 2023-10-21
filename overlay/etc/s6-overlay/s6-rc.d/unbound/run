@@ -7,10 +7,10 @@ bf env load -x unbound
 # Start Unbound daemon
 def main [...args] {
     # pre-flight checks
-    bf-unbound update anchor
-    bf-unbound check conf
+    bf-unbound anchor update
+    bf-unbound conf check
 
     # start Unbound
     bf write "Starting Unbound in daemon mode."
-    s6-setuidgid unbound unbound -c (bf env req UNBOUND_CONF) -d
+    ^s6-setuidgid unbound unbound -c (bf env UNBOUND_CONF) -d
 }
