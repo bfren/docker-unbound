@@ -1,9 +1,9 @@
 use bf
-bf env load -x
+bf env load
 
 # Generate Unbound configuration file and apply permissions
 def main [] {
     bf write "Generating Unbound configuration."
-    bf esh $"(bf env req TEMPLATES)/unbound.conf.esh" (bf env req UNBOUND_CONF)
-    bf ch apply $"(bf env req CH_D)/10-unbound"
+    bf esh $"(bf env TEMPLATES)/unbound.conf.esh" (bf env UNBOUND_CONF)
+    bf ch apply $"(bf env CH_D)/10-unbound"
 }
