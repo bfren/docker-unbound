@@ -7,11 +7,14 @@ def main [] {
     # add unbound user
     bf user add unbound
 
-    # get unbound version and install
+    # get Unbound version and install
     cd /tmp
     let version = bf fs read ./UNBOUND_BUILD
-    bf write $"Installing Unbound ($version)."
+    bf write $"Installing Unbound v($version)."
     do { apk add --no-cache $"unbound=($version)" } | ignore
+
+    # save Unbound version to build log
+    bf build add Unbound $version
 
     # install additional packages
     bf write "Installing additional packages"
