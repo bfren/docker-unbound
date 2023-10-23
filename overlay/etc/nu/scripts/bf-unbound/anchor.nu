@@ -12,6 +12,6 @@ export def update [] {
 
     # capture output of unbound-anchor executable
     let root_key = bf env UNBOUND_ROOT_KEY
-    let result = do { ^s6-setuidgid unbound unbound-anchor -v -a $root_key } | complete
+    let result = do { ^bf-x-as unbound unbound-anchor -v -a $root_key } | complete
     if $result.stdout !~ success { bf write error $" .. failed with error: ($result.stdout)." anchor/update }
 }
