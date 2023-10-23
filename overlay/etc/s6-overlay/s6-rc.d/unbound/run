@@ -11,7 +11,10 @@ nu -c "use bf-unbound run ; run preflight"
 
 
 #======================================================================================================================
-# Start Unbound in daemon mode.
+# Start Unbound in daemon mode..
+# Flags:
+#   -c  path to configuration file
+#   -d  run in daemon mode (allows S6 to supervise the service - which keeps the container running)
 #======================================================================================================================
 
 s6-setuidgid unbound unbound -c ${BF_UNBOUND_CONF} -d
