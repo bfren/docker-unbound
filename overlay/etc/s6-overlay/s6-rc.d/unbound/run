@@ -1,4 +1,4 @@
-#!/usr/bin/bf/bf-withenv sh
+#!/bin/withenv sh
 
 set -euo pipefail
 
@@ -14,4 +14,4 @@ nu -c "use bf-unbound run ; run preflight"
 # Start Unbound in daemon mode.
 #======================================================================================================================
 
-bf-x-as unbound unbound -c ${BF_UNBOUND_CONF} -d
+s6-setuidgid unbound unbound -c ${BF_UNBOUND_CONF} -d
