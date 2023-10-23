@@ -6,5 +6,5 @@ export def check [] {
 
     # capture output of unbound-checkconf executable
     let result = do { ^bf-x-as unbound-checkconf (bf env UNBOUND_CONF) } | complete
-    if $result.exit_code > 0 { $result | into string | bf write error --code $result.exit_code $in conf/check }
+    if $result.exit_code > 0 { bf write error --code $result.exit_code $result.stderr conf/check }
 }
