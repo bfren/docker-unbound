@@ -1,8 +1,4 @@
-#
-# Example configuration file.
-#
 # See unbound.conf(5) man page.
-#
 # Some of the hardening settings are taken from https://dnswatch.com/dns-docs/UNBOUND/.
 
 # The server clause sets the main parameters.
@@ -10,34 +6,34 @@ server:
         # whitespace is not necessary, but looks cleaner.
 
         # verbosity number, 0 is least verbose. 1 is default.
-        verbosity: <%= bf-env UNBOUND_VERBOSITY 1 %>
+        verbosity: <% bf-env UNBOUND_VERBOSITY 1 %>
 
         # print statistics to the log (for every thread) every N seconds.
         # Set to "" or 0 to disable. Default is disabled.
-        statistics-interval: <%= bf-env UNBOUND_STATISTICS_INTERVAL 0 %>
+        statistics-interval: <% bf-env UNBOUND_STATISTICS_INTERVAL 0 %>
 
         # enable shm for stats, default no.  if you enable also enable
         # statistics-interval, every time it also writes stats to the
         # shared memory segment keyed with shm-key.
-        shm-enable: <%= bf-env UNBOUND_SHM_ENABLE no %>
+        shm-enable: <% bf-env UNBOUND_SHM_ENABLE no %>
 
         # shm for stats uses this key, and key+1 for the shared mem segment.
-        shm-key: <%= bf-env UNBOUND_SHM_KEY 11777 %>
+        shm-key: <% bf-env UNBOUND_SHM_KEY 11777 %>
 
         # enable cumulative statistics, without clearing them after printing.
-        statistics-cumulative: <%= bf-env UNBOUND_STATISTICS_CUMULATIVE no %>
+        statistics-cumulative: <% bf-env UNBOUND_STATISTICS_CUMULATIVE no %>
 
         # enable extended statistics (query types, answer codes, status)
         # printed from unbound-control. Default off, because of speed.
-        extended-statistics: <%= bf-env UNBOUND_EXTENDED_STATISTICS no %>
+        extended-statistics: <% bf-env UNBOUND_EXTENDED_STATISTICS no %>
 
         # Inhibits selected extended statistics (qtype, qclass, qopcode, rcode,
         # rpz-actions) from printing if their value is 0.
         # Default on.
-        statistics-inhibit-zero: <%= bf-env UNBOUND_STATISTICS_INHIBIT_ZERO yes %>
+        statistics-inhibit-zero: <% bf-env UNBOUND_STATISTICS_INHIBIT_ZERO yes %>
 
         # number of threads to create. 1 disables threading.
-        num-threads: <%= bf-env UNBOUND_NUM_THREADS 1 %>
+        num-threads: <% bf-env UNBOUND_NUM_THREADS 1 %>
 
         # specify the interfaces to answer queries from by ip-address.
         # The default is to listen to localhost (127.0.0.1 and ::1).
@@ -53,7 +49,7 @@ server:
 
         # enable this feature to copy the source address of queries to reply.
         # Socket options are not supported on all platforms. experimental.
-        interface-automatic: <%= bf-env UNBOUND_INTERFACE_AUTOMATIC no %>
+        interface-automatic: <% bf-env UNBOUND_INTERFACE_AUTOMATIC no %>
 
         # instead of the default port, open additional ports separated by
         # spaces when interface-automatic is enabled, by listing them here.
@@ -76,10 +72,10 @@ server:
         # And: ip -6 route add local 2001:db8::/64 dev lo
         # And set prefer-ip6: yes to use the ip6 randomness from a netblock.
         # Set this to yes to prefer ipv6 upstream servers over ipv4.
-        prefer-ip6: <%= bf-env UNBOUND_PREFER_IP6 no %>
+        prefer-ip6: <% bf-env UNBOUND_PREFER_IP6 no %>
 
         # Prefer ipv4 upstream servers, even if ipv6 is available.
-        prefer-ip4: <%= bf-env UNBOUND_PREFER_IP4 no %>
+        prefer-ip4: <% bf-env UNBOUND_PREFER_IP4 no %>
 
         # number of ports to allocate per thread, determines the size of the
         # port range that can be open simultaneously.  About double the
@@ -100,18 +96,18 @@ server:
         # outgoing-port-avoid: "3200-3208"
 
         # number of outgoing simultaneous tcp buffers to hold per thread.
-        outgoing-num-tcp: <%= bf-env UNBOUND_OUTGOING_NUM_TCP 10 %>
+        outgoing-num-tcp: <% bf-env UNBOUND_OUTGOING_NUM_TCP 10 %>
 
         # number of incoming simultaneous tcp buffers to hold per thread.
-        incoming-num-tcp: <%= bf-env UNBOUND_INCOMING_NUM_TCP 10 %>
+        incoming-num-tcp: <% bf-env UNBOUND_INCOMING_NUM_TCP 10 %>
 
         # buffer size for UDP port 53 incoming (SO_RCVBUF socket option).
         # 0 is system default.  Use 4m to catch query spikes for busy servers.
-        so-rcvbuf: <%= bf-env UNBOUND_SO_RCVBUF 0 %>
+        so-rcvbuf: <% bf-env UNBOUND_SO_RCVBUF 0 %>
 
         # buffer size for UDP port 53 outgoing (SO_SNDBUF socket option).
         # 0 is system default.  Use 4m to handle spikes on very busy servers.
-        so-sndbuf: <%= bf-env UNBOUND_SO_SNDBUF 0 %>
+        so-sndbuf: <% bf-env UNBOUND_SO_SNDBUF 0 %>
 
         # use SO_REUSEPORT to distribute queries over threads.
         # at extreme load it could be better to turn it off to distribute even.
@@ -134,11 +130,11 @@ server:
 
         # EDNS reassembly buffer to advertise to UDP peers (the actual buffer
         # is set with msg-buffer-size).
-        edns-buffer-size: <%= bf-env UNBOUND_EDNS_BUFFER_SIZE 1232 %>
+        edns-buffer-size: <% bf-env UNBOUND_EDNS_BUFFER_SIZE 1232 %>
 
         # Maximum UDP response size (not applied to TCP response).
         # Suggested values are 512 to 4096. Default is 4096. 65536 disables it.
-        max-udp-size: <%= bf-env UNBOUND_MAX_UDP_SIZE 4096 %>
+        max-udp-size: <% bf-env UNBOUND_MAX_UDP_SIZE 4096 %>
 
         # max memory to use for stream(tcp and tls) waiting result buffers.
         # stream-wait-size: 4m
@@ -196,11 +192,11 @@ server:
 
         # the time to live (TTL) value lower bound, in seconds. Default 0.
         # If more than an hour could easily give trouble due to stale data.
-        cache-min-ttl: <%= bf-env UNBOUND_CACHE_MIN_TTL 0 %>
+        cache-min-ttl: <% bf-env UNBOUND_CACHE_MIN_TTL 0 %>
 
         # the time to live (TTL) value cap for RRsets and messages in the
         # cache. Items are not cached for longer. In seconds.
-        cache-max-ttl: <%= bf-env UNBOUND_CACHE_MAX_TTL 86400 %>
+        cache-max-ttl: <% bf-env UNBOUND_CACHE_MAX_TTL 86400 %>
 
         # the time to live (TTL) value cap for negative responses in the cache
         # cache-max-negative-ttl: 3600
@@ -232,16 +228,16 @@ server:
         # define-tag: "tag1 tag2 tag3"
 
         # Enable IPv4, "yes" or "no".
-        do-ip4: <%= bf-env UNBOUND_DO_IP4 yes %>
+        do-ip4: <% bf-env UNBOUND_DO_IP4 yes %>
 
         # Enable IPv6, "yes" or "no".
-        do-ip6: <%= bf-env UNBOUND_DO_IP6 yes %>
+        do-ip6: <% bf-env UNBOUND_DO_IP6 yes %>
 
         # Enable UDP, "yes" or "no".
-        do-udp: <%= bf-env UNBOUND_DO_UDP yes %>
+        do-udp: <% bf-env UNBOUND_DO_UDP yes %>
 
         # Enable TCP, "yes" or "no".
-        do-tcp: <%= bf-env UNBOUND_DO_TCP yes %>
+        do-tcp: <% bf-env UNBOUND_DO_TCP yes %>
 
         # upstream connections use TCP only (and no UDP), "yes" or "no"
         # useful for tunneling scenarios, default no.
@@ -429,19 +425,19 @@ server:
 
         # file to read root hints from.
         # get one from https://www.internic.net/domain/named.cache
-        root-hints: "<%= bf-env UNBOUND_ROOT_HINTS %>"
+        root-hints: "<% bf-env UNBOUND_ROOT_HINTS %>"
 
         # enable to not answer id.server and hostname.bind queries.
-        hide-identity: <%= bf-env UNBOUND_HIDE_IDENTITY no %>
+        hide-identity: <% bf-env UNBOUND_HIDE_IDENTITY no %>
 
         # enable to not answer version.server and version.bind queries.
-        hide-version: <%= bf-env UNBOUND_HIDE_VERSION no %>
+        hide-version: <% bf-env UNBOUND_HIDE_VERSION no %>
 
         # enable to not answer trustanchor.unbound queries.
         # hide-trustanchor: no
 
         # enable to not set the User-Agent HTTP header.
-        hide-http-user-agent: <%= bf-env UNBOUND_HIDE_HTTP_USER_AGENT no %>
+        hide-http-user-agent: <% bf-env UNBOUND_HIDE_HTTP_USER_AGENT no %>
 
         # the identity to report. Leave "" or default to return hostname.
         # identity: ""
@@ -467,22 +463,22 @@ server:
         # target-fetch-policy: "3 2 1 0 0"
 
         # Harden against very small EDNS buffer sizes.
-        harden-short-bufsize: <%= bf-env UNBOUND_HARDEN_SHORT_BUFSIZE yes %>
+        harden-short-bufsize: <% bf-env UNBOUND_HARDEN_SHORT_BUFSIZE yes %>
 
         # Harden against unseemly large queries.
-        harden-large-queries: <%= bf-env UNBOUND_HARDEN_LARGE_QUERIES no %>
+        harden-large-queries: <% bf-env UNBOUND_HARDEN_LARGE_QUERIES no %>
 
         # Harden against out of zone rrsets, to avoid spoofing attempts.
-        harden-glue: <%= bf-env UNBOUND_HARDEN_GLUE yes %>
+        harden-glue: <% bf-env UNBOUND_HARDEN_GLUE yes %>
 
         # Harden against receiving dnssec-stripped data. If you turn it
         # off, failing to validate dnskey data for a trustanchor will
         # trigger insecure mode for that zone (like without a trustanchor).
         # Default on, which insists on dnssec data for trust-anchored zones.
-        harden-dnssec-stripped: <%= bf-env UNBOUND_HARDEN_DNS_STRIPPED no %>
+        harden-dnssec-stripped: <% bf-env UNBOUND_HARDEN_DNS_STRIPPED no %>
 
         # Harden against queries that fall under dnssec-signed nxdomain names.
-        harden-below-nxdomain: <%= bf-env UNBOUND_HARDEN_BELOW_NXDOMAIN no %>
+        harden-below-nxdomain: <% bf-env UNBOUND_HARDEN_BELOW_NXDOMAIN no %>
 
         # Harden the referral path by performing additional queries for
         # infrastructure data.  Validates the replies (if possible).
@@ -493,12 +489,12 @@ server:
         # Harden against algorithm downgrade when multiple algorithms are
         # advertised in the DS record.  If no, allows the weakest algorithm
         # to validate the zone.
-        harden-algo-downgrade: <%= bf-env UNBOUND_HARDEN_ALGO_DOWNGRADE no %>
+        harden-algo-downgrade: <% bf-env UNBOUND_HARDEN_ALGO_DOWNGRADE no %>
 
         # Sent minimum amount of information to upstream servers to enhance
         # privacy. Only sent minimum required labels of the QNAME and set QTYPE
         # to A when possible.
-        qname-minimisation: <%= bf-env UNBOUND_QNAME_MINIMISATION yes %>
+        qname-minimisation: <% bf-env UNBOUND_QNAME_MINIMISATION yes %>
 
         # QNAME minimisation in strict mode. Do not fall-back to sending full
         # QNAME to potentially broken nameservers. A lot of domains will not be
@@ -508,11 +504,11 @@ server:
 
         # Aggressive NSEC uses the DNSSEC NSEC chain to synthesize NXDOMAIN
         # and other denials, using information from previous NXDOMAINs answers.
-        aggressive-nsec: <%= bf-env UNBOUND_AGGRESSIVE_NSEC yes %>
+        aggressive-nsec: <% bf-env UNBOUND_AGGRESSIVE_NSEC yes %>
 
         # Use 0x20-encoded random bits in the query to foil spoof attempts.
         # This feature is an experimental implementation of draft dns-0x20.
-        use-caps-for-id: <%= bf-env UNBOUND_USE_CAPS_FOR_ID no %>
+        use-caps-for-id: <% bf-env UNBOUND_USE_CAPS_FOR_ID no %>
 
         # Domains (and domains in them) without support for dns-0x20 and
         # the fallback fails because they keep sending different answers.
@@ -524,7 +520,7 @@ server:
         # Protects against 'DNS Rebinding' (uses browser as network proxy).
         # Only 'private-domain' and 'local-data' names are allowed to have
         # these private addresses. No default.
-<% if [ bf-env-check UNBOUND_PRIVATE_ADDRESS_ENABLE ] ; then -%>
+<% if bf-env-check UNBOUND_PRIVATE_ADDRESS_ENABLE ; then -%>
         private-address: 10.0.0.0/8
         private-address: 172.16.0.0/12
         private-address: 192.168.0.0/16
@@ -560,23 +556,23 @@ server:
 
         # if yes, the above default do-not-query-address entries are present.
         # if no, localhost can be queried (for testing and debugging).
-        do-not-query-localhost: <%= bf-env UNBOUND_DO_NOT_QUERY_LOCALHOST yes %>
+        do-not-query-localhost: <% bf-env UNBOUND_DO_NOT_QUERY_LOCALHOST yes %>
 
         # if yes, perform prefetching of almost expired message cache entries.
-        prefetch: <%= bf-env UNBOUND_PREFETCH no %>
+        prefetch: <% bf-env UNBOUND_PREFETCH no %>
 
         # if yes, perform key lookups adjacent to normal lookups.
-        prefetch-key: <%= bf-env UNBOUND_PREFETCH_KEY no %>
+        prefetch-key: <% bf-env UNBOUND_PREFETCH_KEY no %>
 
         # deny queries of type ANY with an empty response.
-        deny-any: <%= bf-env UNBOUND_DENY_ANY no %>
+        deny-any: <% bf-env UNBOUND_DENY_ANY no %>
 
         # if yes, Unbound rotates RRSet order in response.
         # rrset-roundrobin: yes
 
         # if yes, Unbound doesn't insert authority/additional sections
         # into response messages when those sections are not required.
-        minimal-responses: <%= bf-env UNBOUND_MINIMAL_RESPONSES yes %>
+        minimal-responses: <% bf-env UNBOUND_MINIMAL_RESPONSES yes %>
 
         # true to disable DNSSEC lameness check in iterator.
         # disable-dnssec-lame-check: no
@@ -597,7 +593,7 @@ server:
         # And then enable the auto-trust-anchor-file config item.
         # Please note usage of unbound-anchor root anchor is at your own risk
         # and under the terms of our LICENSE (see that file in the source).
-        auto-trust-anchor-file: "<%= bf-env UNBOUND_ROOT_KEY %>"
+        auto-trust-anchor-file: "<% bf-env UNBOUND_ROOT_KEY %>"
 
         # trust anchor signaling sends a RFC8145 key tag query after priming.
         # trust-anchor-signaling: yes
