@@ -11,12 +11,12 @@ def main [] {
     cd /tmp
     let version = bf fs read ./UNBOUND_BUILD
     bf write $"Installing Unbound v($version)."
-    bf install add [$"unbound=($version)"]
+    bf pkg install [$"unbound=($version)"]
 
     # save Unbound version to build log
     bf build add Unbound $version
 
     # install additional packages
     bf write "Installing additional packages"
-    bf install add [drill]
+    bf pkg install [drill]
 }
