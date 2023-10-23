@@ -1,16 +1,17 @@
-#!/usr/bin/nu
+#!/usr/bin/bf/bf-withenv sh
 
-use bf
-use bf-unbound
-bf env load -x unbound
+set -euo pipefail
 
-# Start Unbound daemon
-def main [...args] {
-    # pre-flight checks
-    bf-unbound anchor update
-    bf-unbound conf check
 
-    # start Unbound
-    bf write "Starting Unbound in daemon mode."
-    ^exec bf-x-as unbound unbound -c (bf env UNBOUND_CONF) -d
-}
+#======================================================================================================================
+# Run preflight checks.
+#======================================================================================================================
+
+nu -c "use bf-unbound run ; run preflight"
+
+
+#======================================================================================================================
+# Start Unbound in daemon mode.
+#======================================================================================================================
+
+bf-x-as unbound unbound -c ${BF_UNBOUND_CONF} -d
