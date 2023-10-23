@@ -12,5 +12,5 @@ def main [...args] {
 
     # start Unbound
     bf write "Starting Unbound in daemon mode."
-    ^bf-x-as unbound unbound -c (bf env UNBOUND_CONF) -d
+    ^exec bf-x-as unbound unbound -c (bf env UNBOUND_CONF) -d
 }
