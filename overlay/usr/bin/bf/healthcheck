@@ -10,6 +10,5 @@ def main [
     bf write debug $"Requesting DNS for ($domain)."
 
     # capture output of drill executable
-    let result = do { ^drill $domain @127.0.0.1 } | complete
-    if $result.exit_code > 0 { bf write error --code $result.exit_code ($result.stderr | str trim) }
+    { ^drill $domain @127.0.0.1 } | bf handle | ignore
 }
