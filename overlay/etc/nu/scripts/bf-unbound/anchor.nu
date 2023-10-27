@@ -12,7 +12,7 @@ export def update [] {
 
     # capture output of unbound-anchor executable
     let root_key = bf env UNBOUND_ROOT_KEY
-    let result = do { ^exec bf-x-as unbound unbound-anchor -v -a $root_key } | complete
+    let result = do { ^bf-x-as unbound unbound-anchor -v -a $root_key } | complete
 
     # on first run unbound-anchor always returns exit code 1 because the anchor file does not exist -
     # even if it goes on to create it successfully
