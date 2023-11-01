@@ -1,14 +1,10 @@
-#!/usr/bin/nu
+#!/bin/withenv sh
 
-use bf
-bf env load -x
+set -euo pipefail
 
-# Attempt to load DNS for $domain
-def main [
-    domain: string = "cloudflare.com"   # Te domain to load
-] {
-    bf write debug $"Requesting DNS for ($domain)."
 
-    # capture output of drill executable
-    { ^drill $domain @127.0.0.1 } | bf handle -c | exit $in
-}
+#======================================================================================================================
+# Attempt to load DNS for cloudflare.com
+#======================================================================================================================
+
+drill cloudflare.com @127.0.0.1
