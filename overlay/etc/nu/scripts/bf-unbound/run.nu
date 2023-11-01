@@ -8,7 +8,7 @@ export def preflight [] {
     bf env load
 
     # manually set executing script
-    bf env set X unbound/run
+    bf env x_set --override run unbound
 
     # update root anchor and verify configuration
     anchor update
