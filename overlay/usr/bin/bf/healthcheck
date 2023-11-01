@@ -1,4 +1,4 @@
-#!/bin/withenv sh
+#!/bin/sh
 
 set -euo pipefail
 
