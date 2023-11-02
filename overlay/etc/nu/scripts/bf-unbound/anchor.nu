@@ -11,13 +11,14 @@ export def update [] {
     bf write debug "Updating root anchor." anchor/update
 
     # capture output of unbound-anchor executable
+    # use -i flag to ignore any errors and check value of stdout instead
     let root_key = bf env UNBOUND_ROOT_KEY
-    let result = { ^bf-x-as unbound unbound-anchor -v -a $root_key } | bf handle -i
+    let stdout = { ^bf-x-as unbound unbound-anchor -v -a $root_key } | bf handle -i
 
     # on first run unbound-anchor always returns exit code 1 because the anchor file does not exist -
     # even if it goes on to create it successfully
     # therefore instead of checking the exit code we check the output of the command, and write an error
     # if it does not contain the success message
     let success = "success: the anchor is ok"
-    if $result !~ $success { bf write error $" .. failed with error: ($result)." anchor/update }
+    if $stdout !~ $success { bf write error $" .. failed with error: ($stdout)." anchor/update }
 }
