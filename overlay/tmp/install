@@ -17,6 +17,6 @@ def main [] {
     bf build add Unbound $version
 
     # install additional packages
-    bf write "Installing additional packages"
+    bf write "Installing additional packages."
     bf pkg install [drill]
 }
