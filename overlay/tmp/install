@@ -19,4 +19,7 @@ def main [] {
     # install additional packages
     bf write "Installing additional packages."
     bf pkg install [drill]
+
+    # add bf-unbound module to config
+    bf config use bf-unbound
 }
