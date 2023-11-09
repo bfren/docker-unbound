@@ -13,7 +13,7 @@ export def update [] {
     # capture output of unbound-anchor executable
     # use -i flag to ignore any errors and check value of stdout instead
     let root_key = bf env UNBOUND_ROOT_KEY
-    let stdout = { ^bf-x-as unbound unbound-anchor -v -a $root_key } | bf handle -i
+    let stdout = { ^s6-setuidgid unbound unbound-anchor -v -a $root_key } | bf handle -i
 
     # on first run unbound-anchor always returns exit code 1 because the anchor file does not exist -
     # even if it goes on to create it successfully
