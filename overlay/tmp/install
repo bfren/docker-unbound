@@ -9,7 +9,7 @@ def main [] {
 
     # get Unbound version and install
     cd /tmp
-    let version = bf fs read ./UNBOUND_BUILD
+    let version = bf fs read UNBOUND_BUILD
     bf write $"Installing Unbound v($version)."
     bf pkg install [$"unbound=($version)"]
 
