@@ -1,11 +1,10 @@
-#!/command/with-contenv sh
+#!/bin/sh
 
 set -euo pipefail
-export BF_E=`basename ${0}`
 
 
 #======================================================================================================================
-# Attempt to resolve cloudflare.com.
+# Attempt to load DNS for cloudflare.com
 #======================================================================================================================
 
-drill @127.0.0.1 cloudflare.com > /dev/null 2>&1 || exit 1
+drill cloudflare.com @127.0.0.1

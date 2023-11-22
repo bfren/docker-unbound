@@ -1,39 +1,25 @@
-#!/bin/sh
+#!/usr/bin/nu
 
-set -euo pipefail
-export BF_E=`basename ${0}`
+use bf
 
+# Setup and install Unbound
+def main [] {
+    # add Unbound user
+    bf user add unbound
 
-#======================================================================================================================
-# Add Unbound user.
-#======================================================================================================================
+    # get Unbound version and install
+    cd /tmp
+    let version = bf fs read UNBOUND_BUILD
+    bf write $"Installing Unbound v($version)."
+    bf pkg install [$"unbound=($version)"]
 
-bf-adduser unbound
+    # save Unbound version to build log
+    bf build add Unbound $version
 
+    # install additional packages
+    bf write "Installing additional packages."
+    bf pkg install [drill]
 
-#======================================================================================================================
-# Get Unbound version.
-#======================================================================================================================
-
-cd /tmp
-
-VERSION=$(cat UNBOUND_BUILD)
-bf-echo "Unbound version ${VERSION}."
-
-
-#======================================================================================================================
-# Install Unbound and dependencies.
-#======================================================================================================================
-
-bf-echo "Installing Unbound v${VERSION}..."
-apk add --no-cache \
-    drill \
-    unbound=${VERSION}
-bf-done
-
-
-#======================================================================================================================
-# Cleanup.
-#======================================================================================================================
-
-bf-done
+    # add bf-unbound module to config
+    bf config use bf-unbound
+}

@@ -18,48 +18,48 @@ x-common-env: &common
 #  - uncommented variables are Pi-Hole's suggested overrides (see https://docs.pi-hole.net/guides/dns/unbound/)
 #======================================================================================================================
 x-unbound-env: &unbound
-  #UNBOUND_ENABLE_DNSSEC: 1
-  #UNBOUND_AGGRESSIVE_NSEC: yes
-  #UNBOUND_CACHE_MAX_TTL: 86400
-  #UNBOUND_CACHE_MIN_TTL: 0
-  #UNBOUND_DENY_ANY: no
-  #UNBOUND_DO_IP4: yes
-  UNBOUND_DO_IP6: no
-  #UNBOUND_DO_NOT_QUERY_LOCALHOST: yes
-  #UNBOUND_DO_TCP: yes
-  #UNBOUND_DO_UDP: yes
-  UNBOUND_EDNS_BUFFER_SIZE: 1232
-  #UNBOUND_EXTENDED_STATISTICS: no
-  #UNBOUND_HARDEN_ALGO_DOWNGRADE: no
-  #UNBOUND_HARDEN_BELOW_NXDOMAIN: no
-  UNBOUND_HARDEN_DNS_STRIPPED: yes
-  UNBOUND_HARDEN_GLUE: yes
-  #UNBOUND_HARDEN_LARGE_QUERIES: no
-  #UNBOUND_HARDEN_SHORT_BUFSIZE: yes
-  #UNBOUND_HIDE_HTTP_USER_AGENT: no
-  #UNBOUND_HIDE_IDENTITY: no
-  #UNBOUND_HIDE_VERSION: no
-  #UNBOUND_INCOMING_NUM_TCP: 10
-  #UNBOUND_INTERFACE_AUTOMATIC: no
-  #UNBOUND_MAX_UDP_SIZE: 4096
-  #UNBOUND_MINIMAL_RESPONSES: yes
-  UNBOUND_NUM_THREADS: 1
-  #UNBOUND_OUTGOING_NUM_TCP: 10
-  #UNBOUND_PREFER_IP4: no
-  #UNBOUND_PREFER_IP6: no
-  #UNBOUND_PREFETCH_KEY: no
-  #UNBOUND_PREFETCH: no
-  UNBOUND_PRIVATE_ADDRESS_ENABLE: 1
-  #UNBOUND_QNAME_MINIMISATION: yes
-  #UNBOUND_SHM_ENABLE: no
-  #UNBOUND_SHM_KEY: 11777
-  UNBOUND_SO_RCVBUF: 1m # to assign this much memory you may need to add net.core.rmem_max=1048576 to /etc/sysctl.conf or /etc/sysctl.d/unbound.conf on your host system and reboot
-  #UNBOUND_SO_SNDBUF: 0
-  #UNBOUND_STATISTICS_CUMULATIVE: no
-  #UNBOUND_STATISTICS_INHIBIT_ZERO: yes
-  #UNBOUND_STATISTICS_INTERVAL: 0
-  UNBOUND_USE_CAPS_FOR_ID: no
-  UNBOUND_VERBOSITY: 0
+  #BF_UNBOUND_ENABLE_DNSSEC: 1
+  #BF_UNBOUND_AGGRESSIVE_NSEC: yes
+  #BF_UNBOUND_CACHE_MAX_TTL: 86400
+  #BF_UNBOUND_CACHE_MIN_TTL: 0
+  #BF_UNBOUND_DENY_ANY: no
+  #BF_UNBOUND_DO_IP4: yes
+  BF_UNBOUND_DO_IP6: no
+  #BF_UNBOUND_DO_NOT_QUERY_LOCALHOST: yes
+  #BF_UNBOUND_DO_TCP: yes
+  #BF_UNBOUND_DO_UDP: yes
+  BF_UNBOUND_EDNS_BUFFER_SIZE: 1232
+  #BF_UNBOUND_EXTENDED_STATISTICS: no
+  #BF_UNBOUND_HARDEN_ALGO_DOWNGRADE: no
+  #BF_UNBOUND_HARDEN_BELOW_NXDOMAIN: no
+  BF_UNBOUND_HARDEN_DNS_STRIPPED: yes
+  BF_UNBOUND_HARDEN_GLUE: yes
+  #BF_UNBOUND_HARDEN_LARGE_QUERIES: no
+  #BF_UNBOUND_HARDEN_SHORT_BUFSIZE: yes
+  #BF_UNBOUND_HIDE_HTTP_USER_AGENT: no
+  #BF_UNBOUND_HIDE_IDENTITY: no
+  #BF_UNBOUND_HIDE_VERSION: no
+  #BF_UNBOUND_INCOMING_NUM_TCP: 10
+  #BF_UNBOUND_INTERFACE_AUTOMATIC: no
+  #BF_UNBOUND_MAX_UDP_SIZE: 4096
+  #BF_UNBOUND_MINIMAL_RESPONSES: yes
+  BF_UNBOUND_NUM_THREADS: 1
+  #BF_UNBOUND_OUTGOING_NUM_TCP: 10
+  #BF_UNBOUND_PREFER_IP4: no
+  #BF_UNBOUND_PREFER_IP6: no
+  #BF_UNBOUND_PREFETCH_KEY: no
+  #BF_UNBOUND_PREFETCH: no
+  BF_UNBOUND_PRIVATE_ADDRESS_ENABLE: 1
+  #BF_UNBOUND_QNAME_MINIMISATION: yes
+  #BF_UNBOUND_SHM_ENABLE: no
+  #BF_UNBOUND_SHM_KEY: 11777
+  BF_UNBOUND_SO_RCVBUF: 1m # to assign this much memory you may need to add net.core.rmem_max=1048576 to /etc/sysctl.conf or /etc/sysctl.d/unbound.conf on your host system and reboot
+  #BF_UNBOUND_SO_SNDBUF: 0
+  #BF_UNBOUND_STATISTICS_CUMULATIVE: no
+  #BF_UNBOUND_STATISTICS_INHIBIT_ZERO: yes
+  #BF_UNBOUND_STATISTICS_INTERVAL: 0
+  BF_UNBOUND_USE_CAPS_FOR_ID: no
+  BF_UNBOUND_VERBOSITY: 0
 
 #======================================================================================================================
 # Pi-hole environment variables.
@@ -84,7 +84,7 @@ services:
         ipv4_address: ${IP_RANGE}.2
 
   unbound-backup:
-    image: bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
+    image: bfren/unbound:${BF_UNBOUND_PIN} # suggest updating this pinned version manually after each release
     container_name: unbound-backup
     <<: *restart
     <<: *ports

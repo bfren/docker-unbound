@@ -1,20 +1,20 @@
-#!/command/with-contenv sh
+#!/bin/withenv sh
 
 set -euo pipefail
-export BF_E="${PWD##*/}/$(basename ${0})"
 
 
 #======================================================================================================================
-# Run Unbound service.
+# Run preflight checks
 #======================================================================================================================
 
-[[ ! -f ${UNBOUND_CONF} ]] && bf-error "Unbound configuration file not found."
+nu -c "use bf-unbound run ; run preflight"
 
-bf-echo "Updating root anchor (if DNSSEC is enabled)."
-unbound-update-root-anchor
 
-bf-echo "Checking Unbound configuration."
-unbound-check-conf
+#======================================================================================================================
+# Start Unbound in daemon mode.
+# Flags:
+#   -c  path to configuration file
+#   -d  run in daemon mode (allows S6 to supervise the service - which keeps the container running)
+#======================================================================================================================
 
-bf-echo "Starting Unbound in daemon mode."
-s6-setuidgid unbound unbound -c ${UNBOUND_CONF} -d
+s6-setuidgid unbound unbound -c ${BF_UNBOUND_CONF} -d
