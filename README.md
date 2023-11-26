@@ -36,10 +36,7 @@ You can override various values in Unbound's configuration using environment var
 
 ## Helper Functions
 
-| Function                      | Arguments | Description                                           |
-| ----------------------------- | --------- | ----------------------------------------------------- |
-| `unbound-check-conf`          | *None*    | Verify Unbound's current configuration.               |
-| `unbound-update-root-anchor`  | *None*    | Use `unbound-anchor` to update root key for DNSSEC.   |
+Run `nu`, type `bf-unbound` and hit `tab` to see a list of helper functions.
 
 ## Licence
 
