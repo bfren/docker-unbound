@@ -46,4 +46,4 @@ Run `nu`, type `bf-unbound` and hit `tab` to see a list of helper functions.
 
 > Unbound is (c) 2007, NLnet Labs and licensed under [BSD-3](https://github.com/NLnetLabs/unbound/blob/master/LICENSE).
 >
-> Copyright (c) 2023 [bfren](https://bfren.dev) (unless otherwise stated)
+> Copyright (c) 2023-2024 [bfren](https://bfren.dev) (unless otherwise stated)
