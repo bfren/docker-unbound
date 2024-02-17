@@ -10,12 +10,6 @@ env:
   TEST_TAG: bfren/unbound:test
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Checkout code
-        uses: actions/checkout@v4
   build:
     runs-on: ubuntu-latest
     steps:
