@@ -50,7 +50,7 @@ jobs:
         id: docker_export
         uses: docker/build-push-action@v5
         with:
-          file: ./${{ XXXXX }}/Dockerfile
+          file: ./Dockerfile
           build-args: |
             BF_IMAGE=${{ env.REPOSITORY_NAME }}
             BF_VERSION=${{ steps.version.outputs.contents }}
