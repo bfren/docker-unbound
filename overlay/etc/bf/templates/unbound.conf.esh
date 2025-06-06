@@ -40,6 +40,8 @@ server:
         # specify 0.0.0.0 and ::0 to bind to all available interfaces.
         # specify every interface[@port] on a new 'interface:' labelled line.
         # The listen interfaces are not changed on reload, only on restart.
+        # interface: 0.0.0.0
+        # interface: ::0
         # interface: 192.0.2.153
         # interface: 192.0.2.154
         # interface: 192.0.2.154@5003
@@ -84,7 +86,8 @@ server:
 
         # permit Unbound to use this port number or port range for
         # making outgoing queries, using an outgoing interface.
-        # outgoing-port-permit: 32768
+        # NOTE: 32768-60999 is the ephemeral port range on Linux.
+        # outgoing-port-permit: 32768-60999
 
         # deny Unbound the use this of port number or port range for
         # making outgoing queries, using an outgoing interface.
@@ -177,6 +180,15 @@ server:
         # query upon encountering a CNAME record.
         # max-query-restarts: 11
 
+        # Limit on number of NS records in NS RRset for incoming packets.
+        # iter-scrub-ns: 20
+
+        # Limit on number of CNAME, DNAME records for incoming packets.
+        # iter-scrub-cname: 11
+
+        # Limit on upstream queries for an incoming query and its recursion.
+        # max-global-quota: 200
+
         # msec for waiting for an unknown server to reply.  Increase if you
         # are behind a slow satellite link, to eg. 1128.
         # unknown-server-time-limit: 376
@@ -195,6 +207,12 @@ server:
 
         # Apart from the default, the wait limit with cookie can be adjusted.
         # wait-limit-cookie-netblock: 192.0.2.0/24 50000
+
+        # Defaults for loopback, it has no wait limit.
+        # wait-limit-netblock: 127.0.0.0/8 -1
+        # wait-limit-netblock: ::1/128 -1
+        # wait-limit-cookie-netblock: 127.0.0.0/8 -1
+        # wait-limit-cookie-netblock: ::1/128 -1
 
         # the amount of memory to use for the RRset cache.
         # plain value in bytes or you can append k, m or G. default is "4Mb".
@@ -218,7 +236,7 @@ server:
 
         # the time to live (TTL) value lower bound, in seconds. Default 0.
         # For negative responses in the cache. If disabled, default,
-        # cache-min-tll applies if configured.
+        # cache-min-ttl applies if configured.
         cache-min-negative-ttl: <% bf-env UNBOUND_CACHE_MIN_NEGATIVE_TTL 0 %>
 
         # the time to live (TTL) value for cached roundtrip times, lameness and
@@ -266,10 +284,12 @@ server:
         # nat64-prefix: 64:ff9b::0/96
 
         # Enable UDP, "yes" or "no".
+        # NOTE: if setting up an Unbound on tls443 for public use, you might want to
+        # disable UDP to avoid being used in DNS amplification attacks.
         do-udp: <% bf-env UNBOUND_DO_UDP yes %>
 
         # Enable TCP, "yes" or "no".
-        do-tcp: <% bf-env UNBOUND_DO_TCP yes %>
+        # do-tcp: yes
 
         # upstream connections use TCP only (and no UDP), "yes" or "no"
         # useful for tunneling scenarios, default no.
@@ -352,7 +372,6 @@ server:
         # interface-action: 192.0.2.154@5003 allow
         # interface-action: 2001:DB8::5 allow
         # interface-action: eth0@5003 allow
-        interface-action: 0.0.0.0 allow
 
         # Similar to 'access-control-tag:' but for interfaces.
         # Tag interfaces with a list of tags (in "" with spaces between).
@@ -419,7 +438,7 @@ server:
         # if given, user privileges are dropped (after binding port),
         # and the given username is assumed. Default is user "unbound".
         # If you give "" no privileges are dropped.
-        username: "unbound"
+        # username: "unbound"
 
         # the working directory. The relative files in this config are
         # relative to this directory. If you give "" the working directory
@@ -442,6 +461,10 @@ server:
 
         # print UTC timestamp in ascii to logfile, default is epoch in seconds.
         # log-time-ascii: no
+
+        # log timestamp in ISO8601 format if also log-time-ascii is enabled.
+        # (y-m-dTh:m:s.msec[+-]tzhours:tzminutes)
+        # log-time-iso: no
 
         # print one line with time, IP, name, type, class for every query.
         # log-queries: no
@@ -466,19 +489,19 @@ server:
 
         # file to read root hints from.
         # get one from https://www.internic.net/domain/named.cache
-        root-hints: "<% bf-env UNBOUND_ROOT_HINTS %>"
+        # root-hints: ""
 
         # enable to not answer id.server and hostname.bind queries.
-        hide-identity: <% bf-env UNBOUND_HIDE_IDENTITY no %>
+        # hide-identity: no
 
         # enable to not answer version.server and version.bind queries.
-        hide-version: <% bf-env UNBOUND_HIDE_VERSION no %>
+        # hide-version: no
 
         # enable to not answer trustanchor.unbound queries.
         # hide-trustanchor: no
 
         # enable to not set the User-Agent HTTP header.
-        hide-http-user-agent: <% bf-env UNBOUND_HIDE_HTTP_USER_AGENT no %>
+        # hide-http-user-agent: no
 
         # the identity to report. Leave "" or default to return hostname.
         # identity: ""
@@ -504,13 +527,16 @@ server:
         # target-fetch-policy: "3 2 1 0 0"
 
         # Harden against very small EDNS buffer sizes.
-        harden-short-bufsize: <% bf-env UNBOUND_HARDEN_SHORT_BUFSIZE yes %>
+        # harden-short-bufsize: yes
 
         # Harden against unseemly large queries.
-        harden-large-queries: <% bf-env UNBOUND_HARDEN_LARGE_QUERIES no %>
+        # harden-large-queries: no
 
         # Harden against out of zone rrsets, to avoid spoofing attempts.
         harden-glue: <% bf-env UNBOUND_HARDEN_GLUE yes %>
+
+        # Harden against unverified (outside-zone, including sibling zone) glue rrsets
+        harden-unverified-glue: <% bf-env UNBOUND_HARDEN_UNVERIFIED_GLUE yes %>
 
         # Harden against receiving dnssec-stripped data. If you turn it
         # off, failing to validate dnskey data for a trustanchor will
@@ -528,8 +554,9 @@ server:
         # harden-referral-path: no
 
         # Harden against algorithm downgrade when multiple algorithms are
-        # advertised in the DS record.  If no, allows the weakest algorithm
-        # to validate the zone.
+        # advertised in the DS record.  If no, allows any algorithm
+        # to validate the zone which is the standard behavior for validators.
+        # Check the manpage for detailed information.
         harden-algo-downgrade: <% bf-env UNBOUND_HARDEN_ALGO_DOWNGRADE no %>
 
         # Harden against unknown records in the authority section and the
@@ -649,7 +676,7 @@ server:
         # File with trusted keys for validation. Specify more than one file
         # with several entries, one file per entry.
         # Zone file format, with DS and DNSKEY entries.
-        # Note this gets out of date, use auto-trust-anchor-file please.
+        # NOTE: This file is provided by the dnssec-root package.
         # trust-anchor-file: "/usr/share/dnssec-root/trusted-key.key"
 
         # Trusted key for validation. DS or DNSKEY. specify the RR on a
@@ -699,6 +726,7 @@ server:
         # instead of SERVFAIL. It still performs the security checks, which
         # result in interesting log files and possibly the AD bit in
         # replies if the message is found secure. The default is off.
+        # NOTE: TURNING THIS ON DISABLES ALL DNSSEC SECURITY!
         # val-permissive-mode: no
 
         # Ignore the CD flag in incoming queries and refuse them bogus data.
@@ -712,12 +740,13 @@ server:
         # disable-edns-do: no
 
         # Serve expired responses from cache, with serve-expired-reply-ttl in
-        # the response, and then attempt to fetch the data afresh.
+        # the response. By default it first tries to refresh an expired answer.
+        # Can be configured with serve-expired-client-timeout.
         # serve-expired: no
         #
         # Limit serving of expired responses to configured seconds after
         # expiration. 0 disables the limit.
-        # serve-expired-ttl: 0
+        # serve-expired-ttl: 86400
         #
         # Set the TTL of expired records to the serve-expired-ttl value after a
         # failed attempt to retrieve the record from upstream. This makes sure
@@ -730,10 +759,9 @@ server:
         #
         # Time in milliseconds before replying to the client with expired data.
         # This essentially enables the serve-stale behavior as specified in
-        # RFC 8767 that first tries to resolve before
-        # immediately responding with expired data.  0 disables this behavior.
-        # A recommended value is 1800.
-        # serve-expired-client-timeout: 0
+        # RFC 8767 that first tries to resolve before immediately responding
+        # with expired data.  0 disables this behavior.
+        # serve-expired-client-timeout: 1800
 
         # Return the original TTL as received from the upstream name server rather
         # than the decrementing TTL as stored in the cache.  Enabling this feature
@@ -744,7 +772,7 @@ server:
 
         # Have the validator log failed validations for your diagnosis.
         # 0: off. 1: A line per failed user query. 2: With reason and bad IP.
-        # val-log-level: 0
+        # val-log-level: 1
 
         # It is possible to configure NSEC3 maximum iteration counts per
         # keysize. Keep this table very short, as linear search is done.
@@ -792,6 +820,8 @@ server:
         # local-zone: "127.in-addr.arpa." nodefault
         # local-zone: "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa." nodefault
         # local-zone: "home.arpa." nodefault
+        # local-zone: "resolver.arpa." nodefault
+        # local-zone: "service.arpa." nodefault
         # local-zone: "onion." nodefault
         # local-zone: "test." nodefault
         # local-zone: "invalid." nodefault
@@ -898,10 +928,11 @@ server:
         # the TLS stream, and over HTTPS using HTTP/2 as specified in RFC8484.
         # Give the certificate to use and private key.
         # default is "" (disabled).  requires restart to take effect.
-        # tls-service-key: "path/to/privatekeyfile.key"
-        # tls-service-pem: "path/to/publiccertfile.pem"
+        # tls-service-key: "/etc/unbound/doh-server.key"
+        # tls-service-pem: "/etc/unbound/doh-server.pem"
         # tls-port: 853
         # https-port: 443
+        # quic-port: 853
 
         # cipher setting for TLSv1.2
         # tls-ciphers: "DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256"
@@ -965,6 +996,9 @@ server:
 
         # Disable TLS for DNS-over-HTTP downstream service.
         # http-notls-downstream: no
+
+        # Maximum number of bytes used for QUIC buffers.
+        # quic-size: 8m
 
         # The interfaces that use these listed port numbers will support and
         # expect PROXYv2. For UDP and TCP/TLS interfaces.
@@ -1042,13 +1076,23 @@ server:
         # example value "000102030405060708090a0b0c0d0e0f".
         # cookie-secret: <128 bit random hex string>
 
+        # File with cookie secrets, the 'cookie-secret:' option is ignored
+        # and the file can be managed to have staging and active secrets
+        # with remote control commands. Disabled with "". Default is "".
+        # cookie-secret-file: "/usr/local/etc/unbound_cookiesecrets.txt"
+
         # Enable to attach Extended DNS Error codes (RFC8914) to responses.
-        # ede: no
+        ede: <% bf-env UNBOUND_EDE yes %>
 
         # Enable to attach an Extended DNS Error (RFC8914) Code 3 - Stale
         # Answer as EDNS0 option to expired responses.
         # Note that the ede option above needs to be enabled for this to work.
-        # ede-serve-expired: no
+        ede-serve-expired: <% bf-env UNBOUND_EDE_SERVE_EXPIRED yes %>
+
+        # Enable DNS Error Reporting (RFC9567).
+        # qname-minimisation is advised to be turned on as well to increase
+        # privacy on the outgoing reports.
+        # dns-error-reporting: no
 
         # Specific options for ipsecmod. Unbound needs to be configured with
         # --enable-ipsecmod for these to take effect.
@@ -1278,15 +1322,35 @@ remote-control:
 #     # redis server's TCP port
 #     redis-server-port: 6379
 #     # if the server uses a unix socket, set its path, or "" when not used.
-#     # redis-server-path: "/var/lib/redis/redis-server.sock"
+#     redis-server-path: "/var/lib/redis/redis-server.sock"
 #     # if the server uses an AUTH password, specify here, or "" when not used.
-#     # redis-server-password: ""
+#     redis-server-password: ""
 #     # timeout (in ms) for communication with the redis server
 #     redis-timeout: 100
+#     # timeout (in ms) for commands, if 0, uses redis-timeout.
+#     redis-command-timeout: 0
+#     # timeout (in ms) for connection set up, if 0, uses redis-timeout.
+#     redis-connect-timeout: 0
 #     # set timeout on redis records based on DNS response TTL
 #     redis-expire-records: no
 #     # redis logical database to use, 0 is the default database.
 #     redis-logical-db: 0
+#     # redis replica server's IP address or host name
+#     redis-replica-server-host: 127.0.0.1
+#     # redis replica server's TCP port
+#     redis-replica-server-port: 6379
+#     # if the replica server uses a unix socket, set its path, or "" when not used.
+#     redis-replica-server-path: "/var/lib/redis/redis-server.sock"
+#     # if the replica server uses an AUTH password, specify here, or "" when not used.
+#     redis-replica-server-password: ""
+#     # timeout (in ms) for communication with the redis replica server
+#     redis-replica-timeout: 100
+#     # timeout (in ms) for redis replica commands, if 0, uses redis-replica-timeout.
+#     redis-replica-command-timeout: 0
+#     # timeout (in ms) for redis replica connection set up, if 0, uses redis-replica-timeout.
+#     redis-replica-connect-timeout: 0
+#     # redis logical database to use for the replica server, 0 is the default database.
+#     redis-replica-logical-db: 0
 
 # IPSet
 # Add specify domain into set via ipset.
@@ -1328,6 +1392,8 @@ remote-control:
 #       dnstap-identity: ""
 #       # if "" it uses the package version.
 #       dnstap-version: ""
+#       # log only 1/N messages, if 0 it is disabled. default 0.
+#       dnstap-sample-rate: 0
 #       dnstap-log-resolver-query-messages: no
 #       dnstap-log-resolver-response-messages: no
 #       dnstap-log-client-query-messages: no
@@ -1336,7 +1402,8 @@ remote-control:
 #       dnstap-log-forwarder-response-messages: no
 
 # Response Policy Zones
-# RPZ policies. Applied in order of configuration. QNAME, Response IP
+# RPZ policies. Applied in order of configuration. Any match from an earlier
+# RPZ zone will terminate the RPZ lookup. QNAME, Response IP
 # Address, nsdname, nsip and clientip triggers are supported. Supported
 # actions are: NXDOMAIN, NODATA, PASSTHRU, DROP, Local Data, tcp-only
 # and drop.  Policies can be loaded from a file, or using zone
@@ -1355,3 +1422,5 @@ remote-control:
 #     rpz-signal-nxdomain-ra: no
 #     for-downstream: no
 #     tags: "example"
+
+include-toplevel: "/etc/unbound/unbound.conf.d/*.conf"
