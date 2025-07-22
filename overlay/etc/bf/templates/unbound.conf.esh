@@ -284,7 +284,7 @@ server:
         do-udp: <% bf-env UNBOUND_DO_UDP yes %>
 
         # Enable TCP, "yes" or "no".
-        # do-tcp: yes
+        do-tcp: <% bf-env UNBOUND_DO_TCP yes %>
 
         # upstream connections use TCP only (and no UDP), "yes" or "no"
         # useful for tunneling scenarios, default no.
@@ -435,7 +435,7 @@ server:
         # if given, user privileges are dropped (after binding port),
         # and the given username is assumed. Default is user "unbound".
         # If you give "" no privileges are dropped.
-        # username: "unbound"
+        username: "unbound"
 
         # the working directory. The relative files in this config are
         # relative to this directory. If you give "" the working directory
@@ -486,19 +486,19 @@ server:
 
         # file to read root hints from.
         # get one from https://www.internic.net/domain/named.cache
-        # root-hints: ""
+        root-hints: "<% bf-env UNBOUND_ROOT_HINTS %>"
 
         # enable to not answer id.server and hostname.bind queries.
-        # hide-identity: no
+        hide-identity: <% bf-env UNBOUND_HIDE_IDENTITY no %>
 
         # enable to not answer version.server and version.bind queries.
-        # hide-version: no
+        hide-version: <% bf-env UNBOUND_HIDE_VERSION no %>
 
         # enable to not answer trustanchor.unbound queries.
         # hide-trustanchor: no
 
         # enable to not set the User-Agent HTTP header.
-        # hide-http-user-agent: no
+        hide-http-user-agent: <% bf-env UNBOUND_HIDE_HTTP_USER_AGENT no %>
 
         # the identity to report. Leave "" or default to return hostname.
         # identity: ""
@@ -524,10 +524,10 @@ server:
         # target-fetch-policy: "3 2 1 0 0"
 
         # Harden against very small EDNS buffer sizes.
-        # harden-short-bufsize: yes
+        harden-short-bufsize: <% bf-env UNBOUND_HARDEN_SHORT_BUFSIZE yes %>
 
         # Harden against unseemly large queries.
-        # harden-large-queries: no
+        harden-large-queries: <% bf-env UNBOUND_HARDEN_LARGE_QUERIES no %>
 
         # Harden against out of zone rrsets, to avoid spoofing attempts.
         harden-glue: <% bf-env UNBOUND_HARDEN_GLUE yes %>
