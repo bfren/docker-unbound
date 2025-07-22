@@ -69,10 +69,10 @@ server:
         # And: ip -6 route add local 2001:db8::/64 dev lo
         # And set prefer-ip6: yes to use the ip6 randomness from a netblock.
         # Set this to yes to prefer ipv6 upstream servers over ipv4.
-        <% bf-env UNBOUND_PREFER_IP6 no %>
+        prefer-ip6: <% bf-env UNBOUND_PREFER_IP6 no %>
 
         # Prefer ipv4 upstream servers, even if ipv6 is available.
-        <% bf-env UNBOUND_PREFER_IP4 no %>
+        prefer-ip4: <% bf-env UNBOUND_PREFER_IP4 no %>
 
         # number of ports to allocate per thread, determines the size of the
         # port range that can be open simultaneously.  About double the
