@@ -53,7 +53,7 @@ server:
         # interface-automatic-ports: ""
 
         # port to answer queries from
-        # port: 53
+        port: 53
 
         # specify the interfaces to send outgoing queries to authoritative
         # server from by ip-address. If none, the default (all) interface
@@ -69,10 +69,10 @@ server:
         # And: ip -6 route add local 2001:db8::/64 dev lo
         # And set prefer-ip6: yes to use the ip6 randomness from a netblock.
         # Set this to yes to prefer ipv6 upstream servers over ipv4.
-        # prefer-ip6: no
+        <% bf-env UNBOUND_PREFER_IP6 no %>
 
         # Prefer ipv4 upstream servers, even if ipv6 is available.
-        # prefer-ip4: no
+        <% bf-env UNBOUND_PREFER_IP4 no %>
 
         # number of ports to allocate per thread, determines the size of the
         # port range that can be open simultaneously.  About double the
