@@ -40,25 +40,20 @@ server:
         # specify 0.0.0.0 and ::0 to bind to all available interfaces.
         # specify every interface[@port] on a new 'interface:' labelled line.
         # The listen interfaces are not changed on reload, only on restart.
-        # interface: 0.0.0.0
-        # interface: ::0
-        # interface: 192.0.2.153
-        # interface: 192.0.2.154
-        # interface: 192.0.2.154@5003
-        # interface: 2001:DB8::5
-        # interface: eth0@5003
         interface: 0.0.0.0
+        interface: ::0
 
         # enable this feature to copy the source address of queries to reply.
         # Socket options are not supported on all platforms. experimental.
-        interface-automatic: <% bf-env UNBOUND_INTERFACE_AUTOMATIC no %>
+        # NOTE: Enable this option when specifying interface 0.0.0.0 or ::0.
+        interface-automatic: <% bf-env UNBOUND_INTERFACE_AUTOMATIC yes %>
 
         # instead of the default port, open additional ports separated by
         # spaces when interface-automatic is enabled, by listing them here.
         # interface-automatic-ports: ""
 
         # port to answer queries from
-        port: 53
+        # port: 53
 
         # specify the interfaces to send outgoing queries to authoritative
         # server from by ip-address. If none, the default (all) interface
@@ -74,10 +69,10 @@ server:
         # And: ip -6 route add local 2001:db8::/64 dev lo
         # And set prefer-ip6: yes to use the ip6 randomness from a netblock.
         # Set this to yes to prefer ipv6 upstream servers over ipv4.
-        prefer-ip6: <% bf-env UNBOUND_PREFER_IP6 no %>
+        # prefer-ip6: no
 
         # Prefer ipv4 upstream servers, even if ipv6 is available.
-        prefer-ip4: <% bf-env UNBOUND_PREFER_IP4 no %>
+        # prefer-ip4: no
 
         # number of ports to allocate per thread, determines the size of the
         # port range that can be open simultaneously.  About double the
@@ -87,7 +82,7 @@ server:
         # permit Unbound to use this port number or port range for
         # making outgoing queries, using an outgoing interface.
         # NOTE: 32768-60999 is the ephemeral port range on Linux.
-        # outgoing-port-permit: 32768-60999
+        outgoing-port-permit: 32768-60999
 
         # deny Unbound the use this of port number or port range for
         # making outgoing queries, using an outgoing interface.
@@ -136,8 +131,8 @@ server:
         edns-buffer-size: <% bf-env UNBOUND_EDNS_BUFFER_SIZE 1232 %>
 
         # Maximum UDP response size (not applied to TCP response).
-        # Suggested values are 512 to 4096. Default is 4096. 65536 disables it.
-        max-udp-size: <% bf-env UNBOUND_MAX_UDP_SIZE 4096 %>
+        # Suggested values are 512 to 4096. Default is 1232. 65536 disables it.
+        max-udp-size: <% bf-env UNBOUND_MAX_UDP_SIZE 1232 %>
 
         # max memory to use for stream(tcp and tls) waiting result buffers.
         # stream-wait-size: 4m
@@ -619,7 +614,7 @@ server:
         # threshold, a warning is printed and a defensive action is taken,
         # the cache is cleared to flush potential poison out of it.
         # A suggested value is 10000000, the default is 0 (turned off).
-        # unwanted-reply-threshold: 0
+        unwanted-reply-threshold: <% bf-env UNBOUND_UNWANTED_REPLY_THRESHOLD 10000000 %>
 
         # Do not query the following addresses. No DNS queries are sent there.
         # List one address per entry. List classless netblocks with /size,
