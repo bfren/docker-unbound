@@ -40,18 +40,12 @@ server:
         # specify 0.0.0.0 and ::0 to bind to all available interfaces.
         # specify every interface[@port] on a new 'interface:' labelled line.
         # The listen interfaces are not changed on reload, only on restart.
-        # interface: 0.0.0.0
-        # interface: ::0
-        # interface: 192.0.2.153
-        # interface: 192.0.2.154
-        # interface: 192.0.2.154@5003
-        # interface: 2001:DB8::5
-        # interface: eth0@5003
         interface: 0.0.0.0
 
         # enable this feature to copy the source address of queries to reply.
         # Socket options are not supported on all platforms. experimental.
-        interface-automatic: <% bf-env UNBOUND_INTERFACE_AUTOMATIC no %>
+        # NOTE: Enable this option when specifying interface 0.0.0.0 or ::0.
+        interface-automatic: <% bf-env UNBOUND_INTERFACE_AUTOMATIC yes %>
 
         # instead of the default port, open additional ports separated by
         # spaces when interface-automatic is enabled, by listing them here.
@@ -87,7 +81,7 @@ server:
         # permit Unbound to use this port number or port range for
         # making outgoing queries, using an outgoing interface.
         # NOTE: 32768-60999 is the ephemeral port range on Linux.
-        # outgoing-port-permit: 32768-60999
+        outgoing-port-permit: 32768-60999
 
         # deny Unbound the use this of port number or port range for
         # making outgoing queries, using an outgoing interface.
@@ -136,8 +130,8 @@ server:
         edns-buffer-size: <% bf-env UNBOUND_EDNS_BUFFER_SIZE 1232 %>
 
         # Maximum UDP response size (not applied to TCP response).
-        # Suggested values are 512 to 4096. Default is 4096. 65536 disables it.
-        max-udp-size: <% bf-env UNBOUND_MAX_UDP_SIZE 4096 %>
+        # Suggested values are 512 to 4096. Default is 1232. 65536 disables it.
+        max-udp-size: <% bf-env UNBOUND_MAX_UDP_SIZE 1232 %>
 
         # max memory to use for stream(tcp and tls) waiting result buffers.
         # stream-wait-size: 4m
@@ -289,7 +283,7 @@ server:
         do-udp: <% bf-env UNBOUND_DO_UDP yes %>
 
         # Enable TCP, "yes" or "no".
-        # do-tcp: yes
+        do-tcp: <% bf-env UNBOUND_DO_TCP yes %>
 
         # upstream connections use TCP only (and no UDP), "yes" or "no"
         # useful for tunneling scenarios, default no.
@@ -372,6 +366,7 @@ server:
         # interface-action: 192.0.2.154@5003 allow
         # interface-action: 2001:DB8::5 allow
         # interface-action: eth0@5003 allow
+        interface-action: 0.0.0.0 allow
 
         # Similar to 'access-control-tag:' but for interfaces.
         # Tag interfaces with a list of tags (in "" with spaces between).
@@ -438,7 +433,7 @@ server:
         # if given, user privileges are dropped (after binding port),
         # and the given username is assumed. Default is user "unbound".
         # If you give "" no privileges are dropped.
-        # username: "unbound"
+        username: "unbound"
 
         # the working directory. The relative files in this config are
         # relative to this directory. If you give "" the working directory
@@ -489,19 +484,19 @@ server:
 
         # file to read root hints from.
         # get one from https://www.internic.net/domain/named.cache
-        # root-hints: ""
+        root-hints: "<% bf-env UNBOUND_ROOT_HINTS %>"
 
         # enable to not answer id.server and hostname.bind queries.
-        # hide-identity: no
+        hide-identity: <% bf-env UNBOUND_HIDE_IDENTITY no %>
 
         # enable to not answer version.server and version.bind queries.
-        # hide-version: no
+        hide-version: <% bf-env UNBOUND_HIDE_VERSION no %>
 
         # enable to not answer trustanchor.unbound queries.
         # hide-trustanchor: no
 
         # enable to not set the User-Agent HTTP header.
-        # hide-http-user-agent: no
+        hide-http-user-agent: <% bf-env UNBOUND_HIDE_HTTP_USER_AGENT no %>
 
         # the identity to report. Leave "" or default to return hostname.
         # identity: ""
@@ -527,10 +522,10 @@ server:
         # target-fetch-policy: "3 2 1 0 0"
 
         # Harden against very small EDNS buffer sizes.
-        # harden-short-bufsize: yes
+        harden-short-bufsize: <% bf-env UNBOUND_HARDEN_SHORT_BUFSIZE yes %>
 
         # Harden against unseemly large queries.
-        # harden-large-queries: no
+        harden-large-queries: <% bf-env UNBOUND_HARDEN_LARGE_QUERIES no %>
 
         # Harden against out of zone rrsets, to avoid spoofing attempts.
         harden-glue: <% bf-env UNBOUND_HARDEN_GLUE yes %>
@@ -619,7 +614,7 @@ server:
         # threshold, a warning is printed and a defensive action is taken,
         # the cache is cleared to flush potential poison out of it.
         # A suggested value is 10000000, the default is 0 (turned off).
-        # unwanted-reply-threshold: 0
+        unwanted-reply-threshold: <% bf-env UNBOUND_UNWANTED_REPLY_THRESHOLD 10000000 %>
 
         # Do not query the following addresses. No DNS queries are sent there.
         # List one address per entry. List classless netblocks with /size,
