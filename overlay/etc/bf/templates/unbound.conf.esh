@@ -45,7 +45,7 @@ server:
         # enable this feature to copy the source address of queries to reply.
         # Socket options are not supported on all platforms. experimental.
         # NOTE: Enable this option when specifying interface 0.0.0.0 or ::0.
-        interface-automatic: <% bf-env UNBOUND_INTERFACE_AUTOMATIC no %>
+        interface-automatic: <% bf-env UNBOUND_INTERFACE_AUTOMATIC yes %>
 
         # instead of the default port, open additional ports separated by
         # spaces when interface-automatic is enabled, by listing them here.
