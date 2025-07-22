@@ -41,7 +41,6 @@ server:
         # specify every interface[@port] on a new 'interface:' labelled line.
         # The listen interfaces are not changed on reload, only on restart.
         interface: 0.0.0.0
-        interface: ::0
 
         # enable this feature to copy the source address of queries to reply.
         # Socket options are not supported on all platforms. experimental.
@@ -368,7 +367,6 @@ server:
         # interface-action: 2001:DB8::5 allow
         # interface-action: eth0@5003 allow
         interface-action: 0.0.0.0 allow
-        interface-action: ::0 allow
 
         # Similar to 'access-control-tag:' but for interfaces.
         # Tag interfaces with a list of tags (in "" with spaces between).
