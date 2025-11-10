@@ -4,8 +4,6 @@ IMAGE=`cat VERSION`
 
 docker buildx build \
     --load \
-    --no-cache \
-    --progress plain \
     --build-arg BF_IMAGE=unbound \
     --build-arg BF_VERSION=${IMAGE} \
     -f Dockerfile \
