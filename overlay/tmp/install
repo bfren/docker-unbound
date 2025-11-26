@@ -17,7 +17,7 @@ def main [] {
     bf build add Unbound $version
 
     # download latest root.hints file
-    http get --raw "https://www.internic.net/domain/named.root" | save --force /etc/unbound/root.hints
+    bf http download "https://www.internic.net/domain/named.root" "/etc/unbound/root.hints"
 
     # install additional packages
     bf write "Installing additional packages."
