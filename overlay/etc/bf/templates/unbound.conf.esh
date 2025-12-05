@@ -103,7 +103,7 @@ server:
         so-rcvbuf: <% bf-env UNBOUND_SO_RCVBUF 0 %>
 
         # buffer size for UDP port 53 outgoing (SO_SNDBUF socket option).
-        # 0 is system default.  Use 4m to handle spikes on very busy servers.
+        # 0 is system default. Set larger to handle spikes on very busy servers.
         so-sndbuf: <% bf-env UNBOUND_SO_SNDBUF 0 %>
 
         # use SO_REUSEPORT to distribute queries over threads.
@@ -182,6 +182,10 @@ server:
 
         # Limit on upstream queries for an incoming query and its recursion.
         # max-global-quota: 200
+
+        # Should the scrubber remove promiscuous NS from positive answers,
+        # protects against poison attempts.
+        iter-scrub-promiscuous: <% bf-env UNBOUND_SCRUB_PROMISCUOUS yes %>
 
         # msec for waiting for an unknown server to reply.  Increase if you
         # are behind a slow satellite link, to eg. 1128.
@@ -266,7 +270,7 @@ server:
         do-ip6: <% bf-env UNBOUND_DO_IP6 yes %>
 
         # If running unbound on an IPv6-only host, domains that only have
-        # IPv4 servers would become unresolveable.  If NAT64 is available in
+        # IPv4 servers would become unresolvable.  If NAT64 is available in
         # the network, unbound can use NAT64 to reach these servers with
         # the following option.  This is NOT needed for enabling DNS64 on a
         # system that has IPv4 connectivity.
@@ -767,7 +771,7 @@ server:
 
         # Have the validator log failed validations for your diagnosis.
         # 0: off. 1: A line per failed user query. 2: With reason and bad IP.
-        # val-log-level: 1
+        val-log-level: 1
 
         # It is possible to configure NSEC3 maximum iteration counts per
         # keysize. Keep this table very short, as linear search is done.
