@@ -1,3 +1,2 @@
-export module anchor.nu
-export module conf.nu
-export module run.nu
+export use anchor.nu
+export use conf.nu
