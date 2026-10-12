@@ -1,20 +1,28 @@
-#!/bin/withenv sh
+#!/usr/bin/nu
 
-set -euo pipefail
+use bf
+use bf-unbound [anchor conf]
+use bf-s6
+bf env load
 
+# Start Unbound as the unbound user
+def main [
+    name: string    # The service name, passed by s6-supervise
+] {
+    # set executable name - used to make log output more useful
+    bf env x_set --override run $name
 
-#======================================================================================================================
-# Run preflight checks
-#======================================================================================================================
+    # run checks before executing service
+    anchor update
+    conf check
 
-nu -c "use bf-unbound run ; run preflight"
-
-
-#======================================================================================================================
-# Start Unbound in daemon mode.
-# Flags:
-#   -c  path to configuration file
-#   -d  do not fork into the background (allows S6 to supervise the service - which keeps the container running)
-#======================================================================================================================
-
-exec s6-setuidgid unbound unbound -c ${BF_UNBOUND_CONF} -d
+    # flags:
+    #   -c  path to configuration file
+    #   -d  do not fork into the background (allows S6 to supervise the service)
+    bf write "Starting Unbound."
+    let args = [
+        "-c" (bf env UNBOUND_CONF)
+        "-d"
+    ]
+    bf-s6 svc launch s6-setuidgid unbound unbound ...$args
+}
