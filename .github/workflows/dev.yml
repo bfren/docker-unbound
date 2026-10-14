@@ -27,6 +27,36 @@ jobs:
           file: ./VERSION
         id: version
       -
+        name: Read Unbound version - major
+        uses: bfren/read-file@v2
+        with:
+          file: ./overlay/tmp/UNBOUND_MAJOR
+        id: unbound_major
+      -
+        name: Read Unbound version - minor
+        uses: bfren/read-file@v2
+        with:
+          file: ./overlay/tmp/UNBOUND_MINOR
+        id: unbound_minor
+      -
+        name: Read Unbound version - revision
+        uses: bfren/read-file@v2
+        with:
+          file: ./overlay/tmp/UNBOUND_REVISION
+        id: unbound_revision
+      -
+        name: Read image version
+        uses: bfren/read-file@v2
+        with:
+          file: ./VERSION_MAJOR
+        id: version_major
+      -
+        name: Read image version
+        uses: bfren/read-file@v2
+        with:
+          file: ./VERSION_MINOR
+        id: version_minor
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v4
       -
@@ -72,9 +102,23 @@ jobs:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: |
             bfren/unbound:dev
+            bfren/unbound:${{ steps.version_major.outputs.contents }}-dev
+            bfren/unbound:${{ steps.version_minor.outputs.contents }}-dev
             bfren/unbound:${{ steps.version.outputs.contents }}-dev
+            bfren/unbound:unbound${{ steps.unbound_major.outputs.contents }}-dev
+            bfren/unbound:unbound${{ steps.unbound_major.outputs.contents }}-${{ steps.version.outputs.contents }}-dev
+            bfren/unbound:unbound${{ steps.unbound_minor.outputs.contents }}-dev
+            bfren/unbound:unbound${{ steps.unbound_minor.outputs.contents }}-${{ steps.version.outputs.contents }}-dev
+            bfren/unbound:unbound${{ steps.unbound_revision.outputs.contents }}-dev
             quay.io/bfren/unbound:dev
+            quay.io/bfren/unbound:${{ steps.version_major.outputs.contents }}-dev
+            quay.io/bfren/unbound:${{ steps.version_minor.outputs.contents }}-dev
             quay.io/bfren/unbound:${{ steps.version.outputs.contents }}-dev
+            quay.io/bfren/unbound:unbound${{ steps.unbound_major.outputs.contents }}-dev
+            quay.io/bfren/unbound:unbound${{ steps.unbound_major.outputs.contents }}-${{ steps.version.outputs.contents }}-dev
+            quay.io/bfren/unbound:unbound${{ steps.unbound_minor.outputs.contents }}-dev
+            quay.io/bfren/unbound:unbound${{ steps.unbound_minor.outputs.contents }}-${{ steps.version.outputs.contents }}-dev
+            quay.io/bfren/unbound:unbound${{ steps.unbound_revision.outputs.contents }}-dev
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
