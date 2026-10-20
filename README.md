@@ -145,7 +145,7 @@ The health check (every 30 seconds) looks up `cloudflare.com` using Unbound itse
 ## Testing
 
 ```sh
-./test.sh   # builds the image and runs /test
+./test.nu   # builds the image and runs /test
 ./run.sh    # builds the image and opens a shell, with DNSSEC on and Unbound on 127.0.0.1:5353/udp
 ```
 
