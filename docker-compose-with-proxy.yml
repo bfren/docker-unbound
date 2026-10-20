@@ -94,7 +94,7 @@ services:
         ipv4_address: ${IP_RANGE}.2
 
   unbound-backup:
-    image: bfren/unbound:${BF_UNBOUND_PIN} # suggest updating this pinned version manually after each release
+    image: bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
     container_name: unbound-backup
     <<: *restart
     environment:
