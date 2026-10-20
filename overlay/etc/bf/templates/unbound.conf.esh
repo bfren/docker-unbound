@@ -671,7 +671,9 @@ server:
         # And then enable the auto-trust-anchor-file config item.
         # Please note usage of unbound-anchor root anchor is at your own risk
         # and under the terms of our LICENSE (see that file in the source).
+<% if bf-env-check UNBOUND_ENABLE_DNSSEC ; then -%>
         auto-trust-anchor-file: "<% bf-env UNBOUND_ROOT_KEY %>"
+<% fi -%>
 
         # trust anchor signaling sends a RFC8145 key tag query after priming.
         # trust-anchor-signaling: yes
