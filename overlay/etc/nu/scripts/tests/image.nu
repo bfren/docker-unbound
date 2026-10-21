@@ -32,6 +32,7 @@ export def install__drill_is_installed_for_health_check [] {
 
 export def scripts__parse [] {
     let paths = [
+        "/etc/bf/health.d/10-unbound.nu"
         "/etc/s6-overlay/s6-rc.d/unbound/run"
         "/etc/s6-overlay/s6-rc.d/unbound/finish"
         "/etc/bf/init.d/10-env.nu"
