@@ -12,6 +12,10 @@ ARG BF_VERSION
 EXPOSE 53/tcp
 EXPOSE 53/udp
 
+ENV \
+    # validate answers with DNSSEC, using the root trust anchor - 0 to disable
+    BF_UNBOUND_ENABLE_DNSSEC=1
+
 COPY --from=unbound / /
 COPY ./overlay /
 
