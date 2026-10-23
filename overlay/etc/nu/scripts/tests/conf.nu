@@ -6,11 +6,12 @@ use bf-unbound
 # helpers
 #======================================================================================================================
 
-# Generate unbound.conf from the template in a temporary directory, with the environment set the way 10-env.nu sets it
-# plus $vars, and return its lines without comments or blank lines
+# Generate unbound.conf from the template in a temporary directory, with the environment set the way the Dockerfile
+# and 10-env.nu set it plus $vars, and return its lines without comments or blank lines
 def render [vars: record = {}]: nothing -> list<string> {
     let file = $"(mktemp --directory)/unbound.conf"
-    let dnssec = ($vars | get --optional BF_UNBOUND_ENABLE_DNSSEC | default "0") == "1"
+    let vars = {BF_UNBOUND_ENABLE_DNSSEC: "1"} | merge $vars
+    let dnssec = $vars.BF_UNBOUND_ENABLE_DNSSEC == "1"
     let paths = bf-unbound paths --dnssec=$dnssec
     let path_vars = {BF_UNBOUND_ROOT_HINTS: $paths.root_hints, BF_UNBOUND_ROOT_KEY: $paths.root_key}
         | transpose key value
@@ -42,16 +43,16 @@ export def paths__always_set_root_hints [] {
 #======================================================================================================================
 
 export def template__renders_without_dnssec [] {
-    # DNSSEC is off by default, and the template must still render without the root key
-    let conf = render
+    # the template must still render without the root key when DNSSEC is disabled
+    let conf = render {BF_UNBOUND_ENABLE_DNSSEC: "0"}
 
     assert ("root-hints: \"/etc/unbound/root.hints\"" in $conf)
     assert ($conf | where {|x| $x starts-with "auto-trust-anchor-file" } | is-empty) "the root key should not be used"
     assert ($conf | where {|x| $x =~ "Unable to get" } | is-empty) "no errors should be written to the configuration"
 }
 
-export def template__uses_root_key_with_dnssec [] {
-    let conf = render {BF_UNBOUND_ENABLE_DNSSEC: "1"}
+export def template__uses_root_key_with_dnssec_by_default [] {
+    let conf = render
 
     assert ("auto-trust-anchor-file: \"/etc/unbound/root.key\"" in $conf)
 }
@@ -67,7 +68,11 @@ export def template__listens_on_port_53_for_all_ipv4_addresses [] {
 export def template__uses_defaults [] {
     let conf = render
 
-    for x in ["verbosity: 1" "num-threads: 1" "cache-min-ttl: 0" "cache-max-ttl: 86400" "prefetch: no" "hide-version: no" "qname-minimisation: yes"] {
+    let expected = [
+        "verbosity: 1" "num-threads: 1" "cache-min-ttl: 0" "cache-max-ttl: 86400" "prefetch: no" "qname-minimisation: yes"
+        "serve-expired: no" "log-servfail: no" "val-log-level: 1" "answer-cookie: no"
+    ]
+    for x in $expected {
         assert ($x in $conf) $"($x) should be set"
     }
 }
@@ -78,10 +83,29 @@ export def template__uses_settings [] {
         BF_UNBOUND_NUM_THREADS: "4"
         BF_UNBOUND_CACHE_MIN_TTL: "3600"
         BF_UNBOUND_PREFETCH: "yes"
-        BF_UNBOUND_HIDE_VERSION: "yes"
+        BF_UNBOUND_HIDE_VERSION: "no"
+        BF_UNBOUND_SERVE_EXPIRED: "yes"
+        BF_UNBOUND_ANSWER_COOKIE: "yes"
+        BF_UNBOUND_HARDEN_DNSSEC_STRIPPED: "no"
+        BF_UNBOUND_ITER_SCRUB_PROMISCUOUS: "no"
     }
 
-    for x in ["verbosity: 2" "num-threads: 4" "cache-min-ttl: 3600" "prefetch: yes" "hide-version: yes"] {
+    let expected = [
+        "verbosity: 2" "num-threads: 4" "cache-min-ttl: 3600" "prefetch: yes" "hide-version: no" "serve-expired: yes"
+        "answer-cookie: yes" "harden-dnssec-stripped: no" "iter-scrub-promiscuous: no"
+    ]
+    for x in $expected {
+        assert ($x in $conf) $"($x) should be set"
+    }
+}
+
+export def template__uses_hardened_defaults [] {
+    let conf = render
+
+    let expected = [
+        "harden-dnssec-stripped: yes" "harden-below-nxdomain: yes" "hide-identity: yes" "hide-version: yes" "deny-any: yes"
+    ]
+    for x in $expected {
         assert ($x in $conf) $"($x) should be set"
     }
 }

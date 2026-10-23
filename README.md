@@ -20,8 +20,6 @@ services:
     ports:
       - "127.0.0.1:53:53/tcp"
       - "127.0.0.1:53:53/udp"
-    environment:
-      - BF_UNBOUND_ENABLE_DNSSEC=1
 ```
 
 Run `docker compose up -d`, then test it from the host:
@@ -67,10 +65,10 @@ Images are published to Docker Hub (`bfren/unbound`) and Quay.io (`quay.io/bfren
 
 ### Environment Variables
 
-| Variable                            | Values   | Description                                                                                              | Default |
-| ----------------------------------- | -------- | -------------------------------------------------------------------------------------------------------- | ------- |
-| `BF_UNBOUND_ENABLE_DNSSEC`          | `0`, `1` | Validate answers with DNSSEC, using the root trust anchor (downloaded and kept up to date). Recommended. | `0`     |
-| `BF_UNBOUND_PRIVATE_ADDRESS_ENABLE` | `0`, `1` | Remove private addresses (e.g. `192.168.0.0/16`) from public answers, to protect against DNS rebinding.  | `0`     |
+| Variable                            | Values   | Description                                                                                             | Default |
+| ----------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- | ------- |
+| `BF_UNBOUND_ENABLE_DNSSEC`          | `0`, `1` | Validate answers with DNSSEC, using the root trust anchor (downloaded and kept up to date).             | `1`     |
+| `BF_UNBOUND_PRIVATE_ADDRESS_ENABLE` | `0`, `1` | Remove private addresses (e.g. `192.168.0.0/16`) from public answers, to protect against DNS rebinding. | `0`     |
 
 Each of these sets the Unbound option of the same name - see the [unbound.conf manual](https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html) for what they do:
 
@@ -93,7 +91,7 @@ Each of these sets the Unbound option of the same name - see the [unbound.conf m
 | `BF_UNBOUND_SO_SNDBUF`                 | `so-sndbuf`                 | `0`        |
 | `BF_UNBOUND_EDNS_BUFFER_SIZE`          | `edns-buffer-size`          | `1232`     |
 | `BF_UNBOUND_MAX_UDP_SIZE`              | `max-udp-size`              | `1232`     |
-| `BF_UNBOUND_SCRUB_PROMISCUOUS`         | `iter-scrub-promiscuous`    | `yes`      |
+| `BF_UNBOUND_ITER_SCRUB_PROMISCUOUS`    | `iter-scrub-promiscuous`    | `yes`      |
 | `BF_UNBOUND_DISCARD_TIMEOUT`           | `discard-timeout`           | `1900`     |
 | `BF_UNBOUND_WAIT_LIMIT`                | `wait-limit`                | `1000`     |
 | `BF_UNBOUND_WAIT_LIMIT_COOKIE`         | `wait-limit-cookie`         | `10000`    |
@@ -104,15 +102,16 @@ Each of these sets the Unbound option of the same name - see the [unbound.conf m
 | `BF_UNBOUND_DO_IP6`                    | `do-ip6`                    | `yes`      |
 | `BF_UNBOUND_DO_UDP`                    | `do-udp`                    | `yes`      |
 | `BF_UNBOUND_DO_TCP`                    | `do-tcp`                    | `yes`      |
-| `BF_UNBOUND_HIDE_IDENTITY`             | `hide-identity`             | `no`       |
-| `BF_UNBOUND_HIDE_VERSION`              | `hide-version`              | `no`       |
+| `BF_UNBOUND_LOG_SERVFAIL`              | `log-servfail`              | `no`       |
+| `BF_UNBOUND_HIDE_IDENTITY`             | `hide-identity`             | `yes`      |
+| `BF_UNBOUND_HIDE_VERSION`              | `hide-version`              | `yes`      |
 | `BF_UNBOUND_HIDE_HTTP_USER_AGENT`      | `hide-http-user-agent`      | `no`       |
 | `BF_UNBOUND_HARDEN_SHORT_BUFSIZE`      | `harden-short-bufsize`      | `yes`      |
 | `BF_UNBOUND_HARDEN_LARGE_QUERIES`      | `harden-large-queries`      | `no`       |
 | `BF_UNBOUND_HARDEN_GLUE`               | `harden-glue`               | `yes`      |
 | `BF_UNBOUND_HARDEN_UNVERIFIED_GLUE`    | `harden-unverified-glue`    | `yes`      |
-| `BF_UNBOUND_HARDEN_DNS_STRIPPED`       | `harden-dnssec-stripped`    | `no`       |
-| `BF_UNBOUND_HARDEN_BELOW_NXDOMAIN`     | `harden-below-nxdomain`     | `no`       |
+| `BF_UNBOUND_HARDEN_DNSSEC_STRIPPED`    | `harden-dnssec-stripped`    | `yes`      |
+| `BF_UNBOUND_HARDEN_BELOW_NXDOMAIN`     | `harden-below-nxdomain`     | `yes`      |
 | `BF_UNBOUND_HARDEN_ALGO_DOWNGRADE`     | `harden-algo-downgrade`     | `no`       |
 | `BF_UNBOUND_HARDEN_UNKNOWN_ADDITIONAL` | `harden-unknown-additional` | `no`       |
 | `BF_UNBOUND_QNAME_MINIMISATION`        | `qname-minimisation`        | `yes`      |
@@ -122,8 +121,11 @@ Each of these sets the Unbound option of the same name - see the [unbound.conf m
 | `BF_UNBOUND_DO_NOT_QUERY_LOCALHOST`    | `do-not-query-localhost`    | `yes`      |
 | `BF_UNBOUND_PREFETCH`                  | `prefetch`                  | `no`       |
 | `BF_UNBOUND_PREFETCH_KEY`              | `prefetch-key`              | `no`       |
-| `BF_UNBOUND_DENY_ANY`                  | `deny-any`                  | `no`       |
+| `BF_UNBOUND_DENY_ANY`                  | `deny-any`                  | `yes`      |
 | `BF_UNBOUND_MINIMAL_RESPONSES`         | `minimal-responses`         | `yes`      |
+| `BF_UNBOUND_SERVE_EXPIRED`             | `serve-expired`             | `no`       |
+| `BF_UNBOUND_VAL_LOG_LEVEL`             | `val-log-level`             | `1`        |
+| `BF_UNBOUND_ANSWER_COOKIE`             | `answer-cookie`             | `no`       |
 | `BF_UNBOUND_EDE`                       | `ede`                       | `yes`      |
 | `BF_UNBOUND_EDE_SERVE_EXPIRED`         | `ede-serve-expired`         | `yes`      |
 
@@ -135,7 +137,7 @@ On every start `/etc/unbound/unbound.conf` is generated from the environment var
 
 Before Unbound starts:
 
-* with `BF_UNBOUND_ENABLE_DNSSEC=1`, `unbound-anchor` downloads or updates the root trust anchor (`/etc/unbound/root.key`)
+* unless `BF_UNBOUND_ENABLE_DNSSEC=0`, `unbound-anchor` downloads or updates the root trust anchor (`/etc/unbound/root.key`)
 * `unbound-checkconf` checks the configuration - if it is invalid, Unbound doesn't start, and the error is in the log
 
 Then Unbound runs under S6 as the `unbound` user. The container stops if it crashes. The root hints (the addresses of the root servers) are downloaded when the image is built.
@@ -159,7 +161,7 @@ Unbound's configuration check failed, or the trust anchor couldn't be downloaded
 
 ### Lookups fail with `SERVFAIL`
 
-With DNSSEC on, `SERVFAIL` usually means an answer failed validation - often because the container's clock is wrong, or the domain's DNSSEC is broken. Try the lookup with `+cd` (checking disabled), e.g. `dig example.com @127.0.0.1 +cd`, to see which.
+With DNSSEC on, `SERVFAIL` usually means an answer failed validation - often because the container's clock is wrong, or the domain's DNSSEC is broken. Try the lookup with `+cd` (checking disabled), e.g. `dig example.com @127.0.0.1 +cd`, to see which, or set `BF_UNBOUND_LOG_SERVFAIL=yes` to log the reason.
 
 ### Port 53 is already in use on the host
 

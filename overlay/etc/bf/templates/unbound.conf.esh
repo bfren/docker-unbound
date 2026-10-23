@@ -1,4 +1,5 @@
 # See unbound.conf(5) man page.
+# Based on the unbound.conf example from Unbound 1.26.2.
 # Some of the hardening settings are taken from https://dnswatch.com/dns-docs/UNBOUND/.
 
 # The server clause sets the main parameters.
@@ -188,7 +189,13 @@ server:
 
         # Should the scrubber remove promiscuous NS from positive answers,
         # protects against poison attempts.
-        iter-scrub-promiscuous: <% bf-env UNBOUND_SCRUB_PROMISCUOUS yes %>
+        iter-scrub-promiscuous: <% bf-env UNBOUND_ITER_SCRUB_PROMISCUOUS yes %>
+
+        # Limit on number of DNSSEC validation attempts for a query.
+        # val-validation-attempts: 32
+
+        # Limit on number of DNSSEC hash attempts for a query.
+        # val-hash-attempts: 32
 
         # msec for waiting for an unknown server to reply.  Increase if you
         # are behind a slow satellite link, to eg. 1128.
@@ -487,7 +494,7 @@ server:
         # log-local-actions: no
 
         # print log lines that say why queries return SERVFAIL to clients.
-        # log-servfail: no
+        log-servfail: <% bf-env UNBOUND_LOG_SERVFAIL no %>
 
         # log system-wide Linux thread ID, insted of Unbound's internal thread
         # counter. Only on Linux and only when threads are available.
@@ -498,10 +505,10 @@ server:
         root-hints: "<% bf-env UNBOUND_ROOT_HINTS %>"
 
         # enable to not answer id.server and hostname.bind queries.
-        hide-identity: <% bf-env UNBOUND_HIDE_IDENTITY no %>
+        hide-identity: <% bf-env UNBOUND_HIDE_IDENTITY yes %>
 
         # enable to not answer version.server and version.bind queries.
-        hide-version: <% bf-env UNBOUND_HIDE_VERSION no %>
+        hide-version: <% bf-env UNBOUND_HIDE_VERSION yes %>
 
         # enable to not answer trustanchor.unbound queries.
         # hide-trustanchor: no
@@ -548,10 +555,10 @@ server:
         # off, failing to validate dnskey data for a trustanchor will
         # trigger insecure mode for that zone (like without a trustanchor).
         # Default on, which insists on dnssec data for trust-anchored zones.
-        harden-dnssec-stripped: <% bf-env UNBOUND_HARDEN_DNS_STRIPPED no %>
+        harden-dnssec-stripped: <% bf-env UNBOUND_HARDEN_DNSSEC_STRIPPED yes %>
 
         # Harden against queries that fall under dnssec-signed nxdomain names.
-        harden-below-nxdomain: <% bf-env UNBOUND_HARDEN_BELOW_NXDOMAIN no %>
+        harden-below-nxdomain: <% bf-env UNBOUND_HARDEN_BELOW_NXDOMAIN yes %>
 
         # Harden the referral path by performing additional queries for
         # infrastructure data.  Validates the replies (if possible).
@@ -568,6 +575,9 @@ server:
         # Harden against unknown records in the authority section and the
         # additional section.
         harden-unknown-additional: <% bf-env UNBOUND_HARDEN_UNKNOWN_ADDITIONAL no %>
+
+        # Harden CNAME redirections by following them.
+        # harden-cname-follow: yes
 
         # Sent minimum amount of information to upstream servers to enhance
         # privacy. Only sent minimum required labels of the QNAME and set QTYPE
@@ -643,7 +653,7 @@ server:
         prefetch-key: <% bf-env UNBOUND_PREFETCH_KEY no %>
 
         # deny queries of type ANY with an empty response.
-        deny-any: <% bf-env UNBOUND_DENY_ANY no %>
+        deny-any: <% bf-env UNBOUND_DENY_ANY yes %>
 
         # if yes, Unbound rotates RRSet order in response.
         # rrset-roundrobin: yes
@@ -660,6 +670,7 @@ server:
         # most modules have to be listed at the beginning of the line,
         # except cachedb(just before iterator), and python (at the beginning,
         # or, just before the iterator).
+        # Note that validator needs configured trust-anchors to be of any use.
         # module-config: "validator iterator"
 
         # File with trusted keys, kept up-to-date using RFC5011 probes,
@@ -727,7 +738,7 @@ server:
         # non-secure data. Useful to shield the users of this validator from
         # potential bogus data in the additional section. All unsigned data
         # in the additional section is removed from secure messages.
-        # val-clean-additional: yes
+        # val-clean-additional: no
 
         # Turn permissive mode on to permit bogus messages. Thus, messages
         # for which security checks failed will be returned to clients,
@@ -750,7 +761,7 @@ server:
         # Serve expired responses from cache, with serve-expired-reply-ttl in
         # the response. By default it first tries to refresh an expired answer.
         # Can be configured with serve-expired-client-timeout.
-        # serve-expired: no
+        serve-expired: <% bf-env UNBOUND_SERVE_EXPIRED no %>
         #
         # Limit serving of expired responses to configured seconds after
         # expiration. 0 disables the limit.
@@ -781,7 +792,7 @@ server:
 
         # Have the validator log failed validations for your diagnosis.
         # 0: off. 1: A line per failed user query. 2: With reason and bad IP.
-        val-log-level: 1
+        val-log-level: <% bf-env UNBOUND_VAL_LOG_LEVEL 1 %>
 
         # It is possible to configure NSEC3 maximum iteration counts per
         # keysize. Keep this table very short, as linear search is done.
@@ -899,6 +910,10 @@ server:
         #   that name
         # o block_a resolves all records normally but returns
         #   NODATA for A queries and ignores local data for that name
+        # o block_aaaa similarly to block_a, resolves all records normally but
+        #   returns NODATA for AAAA queries and ignores local data for that name
+        # o block_a_wdata like block_a but uses local data if present.
+        # o block_aaaa_wdata like block_aaaa but uses local data if present.
         # o always_null returns 0.0.0.0 or ::0 for any name in the zone.
         # o noview breaks out of that view towards global local-zones.
         #
@@ -1098,7 +1113,7 @@ server:
         # fast-server-num: 3
 
         # reply to requests containing DNS Cookies as specified in RFC 7873 and RFC 9018.
-        # answer-cookie: no
+        answer-cookie: <% bf-env UNBOUND_ANSWER_COOKIE no %>
 
         # secret for DNS Cookie generation.
         # useful for anycast deployments.
@@ -1267,6 +1282,7 @@ remote-control:
 #       primary: 199.7.91.13          # d.root-servers.net
 #       primary: 192.5.5.241          # f.root-servers.net
 #       primary: 192.112.36.4         # g.root-servers.net
+#       primary: 198.97.190.53        # h.root-servers.net
 #       primary: 193.0.14.129         # k.root-servers.net
 #       primary: 192.0.47.132         # xfr.cjr.dns.icann.org
 #       primary: 192.0.32.132         # xfr.lax.dns.icann.org
@@ -1275,6 +1291,7 @@ remote-control:
 #       primary: 2001:500:2d::d       # d.root-servers.net
 #       primary: 2001:500:2f::f       # f.root-servers.net
 #       primary: 2001:500:12::d0d     # g.root-servers.net
+#       primary: 2001:500:1::53       # h.root-servers.net
 #       primary: 2001:7fd::1          # k.root-servers.net
 #       primary: 2620:0:2830:202::132 # xfr.cjr.dns.icann.org
 #       primary: 2620:0:2d0:202::132  # xfr.lax.dns.icann.org
@@ -1288,6 +1305,9 @@ remote-control:
 #       zonemd-check: no
 #       zonemd-reject-absence: no
 #       zonefile: "example.org.zone"
+#       max-transfer-size: 0
+#       max-transfer-time: 0
+
 
 # Views
 # Create named views. Name must be unique.
@@ -1454,5 +1474,7 @@ remote-control:
 #     rpz-signal-nxdomain-ra: no
 #     for-downstream: no
 #     tags: "example"
+#     max-transfer-size: 0
+#     max-transfer-time: 0
 
 include-toplevel: "/etc/unbound/unbound.conf.d/*.conf"
