@@ -8,14 +8,14 @@
 
 [Unbound](https://nlnetlabs.nl/projects/unbound/about/) is a recursive DNS resolver: instead of sending your lookups to a public DNS provider, it asks the root servers and each domain's own name servers directly, and can check the answers with DNSSEC.
 
-It is built on [Alpine + S6](https://github.com/bfren/docker-alpine-s6), with Unbound from Alpine's packages, and is configured with environment variables. It works well as the upstream resolver for [Pi-hole](https://pi-hole.net) - see the example compose files in this repository.
+It is built on [Alpine + S6](https://github.com/bfren/docker-alpine-s6), with the latest Unbound release [compiled for Alpine](https://github.com/bfren/unbound) (Alpine's own package stays on the version each Alpine release shipped with), and is configured with environment variables. It works well as the upstream resolver for [Pi-hole](https://pi-hole.net) - see the example compose files in this repository.
 
 ## Quickstart
 
 ```yaml
 services:
   unbound:
-    image: quay.io/bfren/unbound:3.1
+    image: quay.io/bfren/unbound:3.2
     restart: unless-stopped
     ports:
       - "127.0.0.1:53:53/tcp"
@@ -44,17 +44,17 @@ dig example.com @127.0.0.1
 
 ## Tags
 
-Images are published to Docker Hub (`bfren/unbound`) and Quay.io (`quay.io/bfren/unbound`) for `linux/amd64`, `linux/arm/v7` and `linux/arm64`, with Unbound 1.25.2 on Alpine 3.24.
+Images are published to Docker Hub (`bfren/unbound`) and Quay.io (`quay.io/bfren/unbound`) for `linux/amd64`, `linux/arm/v7` and `linux/arm64`, with Unbound 1.26.2 on Alpine 3.24.
 
-| Tag                      | Example              | Use when                                   |
-| ------------------------ | -------------------- | ------------------------------------------ |
-| `latest`                 |                      | You always want the newest image           |
-| `MAJOR`                  | `3`                  | You want updates, but not breaking changes |
-| `MINOR`                  | `3.1`                | You want fixes only - **recommended**      |
-| `VERSION`                | `3.1.16`             | You want to pin this image exactly         |
-| `unboundX`, `unboundX.Y` | `unbound1.25`        | You want an Unbound version                |
-| `unboundX.Y.Z`           | `unbound1.25.2`      | You want an exact Unbound release          |
-| `unboundX.Y-VERSION`     | `unbound1.25-3.1.16` | You want to pin both                       |
+| Tag                      | Example             | Use when                                   |
+| ------------------------ | ------------------- | ------------------------------------------ |
+| `latest`                 |                     | You always want the newest image           |
+| `MAJOR`                  | `3`                 | You want updates, but not breaking changes |
+| `MINOR`                  | `3.2`               | You want fixes only - **recommended**      |
+| `VERSION`                | `3.2.0`             | You want to pin this image exactly         |
+| `unboundX`, `unboundX.Y` | `unbound1.26`       | You want an Unbound version                |
+| `unboundX.Y.Z`           | `unbound1.26.2`     | You want an exact Unbound release          |
+| `unboundX.Y-VERSION`     | `unbound1.26-3.2.0` | You want to pin both                       |
 
 ## Configuration
 

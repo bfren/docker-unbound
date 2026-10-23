@@ -17,6 +17,19 @@ export def install__unbound_matches_build [] {
     assert ($build | str starts-with $installed) $"Unbound ($installed) should match the build ($build)"
 }
 
+export def install__unbound_is_not_from_alpine_packages [] {
+    # Unbound is compiled separately (bfren-bin/unbound) so it can be newer than Alpine's package
+    assert ((^apk info --installed unbound | complete).exit_code != 0) "the Alpine unbound package should not be installed"
+}
+
+export def install__unbound_tools_load [] {
+    # each tool prints its usage for -h - if a shared library is missing it cannot load at all (exit code 127)
+    for x in [unbound-anchor unbound-checkconf unbound-control unbound-host] {
+        let result = ^$x -h | complete
+        assert ($result.exit_code != 127) $"($x) did not load: ($result.stderr)"
+    }
+}
+
 export def install__root_hints_are_downloaded [] {
     assert ((open --raw /etc/unbound/root.hints) =~ 'A\.ROOT-SERVERS\.NET\.')
 }
