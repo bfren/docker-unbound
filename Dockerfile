@@ -9,7 +9,6 @@ ARG BF_VERSION
 EXPOSE 53/tcp
 EXPOSE 53/udp
 
-COPY --from=unbound / /
 COPY ./overlay /
 
 RUN bf-install
