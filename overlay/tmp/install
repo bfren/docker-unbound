@@ -7,11 +7,11 @@ def main [] {
     # add Unbound user
     bf user add unbound
 
-    # get Unbound version and install
+    # Unbound is copied from the bfren-bin/unbound image - install the libraries it needs and the DNSSEC root trust anchor
     cd /tmp
-    let version = bf fs read UNBOUND_BUILD
-    bf write $"Installing Unbound v($version)."
-    bf pkg install [$"unbound=($version)"]
+    let version = bf fs read UNBOUND_REVISION
+    bf write $"Installing libraries for Unbound v($version)."
+    bf pkg install [dnssec-root libcrypto3 libevent libexpat libssl3 nghttp2-libs]
 
     # save Unbound version to build log
     bf build add Unbound $version
