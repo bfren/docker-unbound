@@ -4,7 +4,7 @@ set -euo pipefail
 
 docker pull bfren/alpine
 
-BASE_VERSION="6.7.2"
+BASE_VERSION="6.7.3"
 echo "Base: ${BASE_VERSION}"
 
 # Alpine edition must match the one bfren-bin/unbound is compiled against
