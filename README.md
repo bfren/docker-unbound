@@ -1,6 +1,6 @@
 # Unbound
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/bfren/docker-unbound) ![Docker Pulls](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fpulls%2Funbound) ![Docker Image Size](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fsize%2Funbound) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bfren/docker-unbound/dev.yml?branch=main)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/bfren/docker-unbound) ![Docker Pulls](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fpulls%2Funbound) ![Docker Image Size](https://img.shields.io/endpoint?url=https%3A%2F%2Fbfren.dev%2Fdocker%2Fsize%2Funbound) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bfren/docker-unbound/build.yml?branch=main)
 
 [Docker Hub](https://hub.docker.com/r/bfren/unbound) - [Quay.io](https://quay.io/repository/bfren/unbound) - [bfren ecosystem](https://github.com/bfren/docker)
 
@@ -15,7 +15,7 @@ It is built on [Alpine + S6](https://github.com/bfren/docker-alpine-s6), with th
 ```yaml
 services:
   unbound:
-    image: quay.io/bfren/unbound:3.2
+    image: quay.io/bfren/unbound:4.0
     restart: unless-stopped
     ports:
       - "127.0.0.1:53:53/tcp"
@@ -47,12 +47,12 @@ Images are published to Docker Hub (`bfren/unbound`) and Quay.io (`quay.io/bfren
 | Tag                      | Example             | Use when                                   |
 | ------------------------ | ------------------- | ------------------------------------------ |
 | `latest`                 |                     | You always want the newest image           |
-| `MAJOR`                  | `3`                 | You want updates, but not breaking changes |
-| `MINOR`                  | `3.2`               | You want fixes only - **recommended**      |
-| `VERSION`                | `3.2.0`             | You want to pin this image exactly         |
+| `MAJOR`                  | `4`                 | You want updates, but not breaking changes |
+| `MINOR`                  | `4.0`               | You want fixes only - **recommended**      |
+| `VERSION`                | `4.0.0`             | You want to pin this image exactly         |
 | `unboundX`, `unboundX.Y` | `unbound1.26`       | You want an Unbound version                |
 | `unboundX.Y.Z`           | `unbound1.26.2`     | You want an exact Unbound release          |
-| `unboundX.Y-VERSION`     | `unbound1.26-3.2.0` | You want to pin both                       |
+| `unboundX.Y-VERSION`     | `unbound1.26-4.0.0` | You want to pin both                       |
 
 ## Configuration
 
