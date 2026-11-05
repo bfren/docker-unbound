@@ -1,7 +1,7 @@
 # Unbound compiled for Alpine (see https://github.com/bfren/unbound)
 FROM quay.io/bfren-bin/unbound:1.26.2-261021 AS unbound
 
-FROM quay.io/bfren/alpine-s6:alpine3.24-7.0.0-dev
+FROM quay.io/bfren/alpine-s6:alpine3.24-7.0.0
 
 LABEL org.opencontainers.image.source="https://github.com/bfren/docker-unbound"
 
