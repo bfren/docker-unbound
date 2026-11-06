@@ -26,5 +26,4 @@ DOCKERFILE=$(docker run \
 
 echo "${DOCKERFILE}" > ./Dockerfile
 
-docker system prune -f
 echo "Done."
