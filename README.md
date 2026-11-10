@@ -49,10 +49,10 @@ Images are published to Docker Hub (`bfren/unbound`) and Quay.io (`quay.io/bfren
 | `latest`                 |                     | You always want the newest image           |
 | `MAJOR`                  | `4`                 | You want updates, but not breaking changes |
 | `MINOR`                  | `4.0`               | You want fixes only - **recommended**      |
-| `VERSION`                | `4.0.1`             | You want to pin this image exactly         |
+| `VERSION`                | `4.0.2`             | You want to pin this image exactly         |
 | `unboundX`, `unboundX.Y` | `unbound1.26`       | You want an Unbound version                |
 | `unboundX.Y.Z`           | `unbound1.26.2`     | You want an exact Unbound release          |
-| `unboundX.Y-VERSION`     | `unbound1.26-4.0.1` | You want to pin both                       |
+| `unboundX.Y-VERSION`     | `unbound1.26-4.0.2` | You want to pin both                       |
 
 ## Configuration
 
