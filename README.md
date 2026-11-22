@@ -54,6 +54,8 @@ Images are published to Docker Hub (`bfren/unbound`) and Quay.io (`quay.io/bfren
 | `unboundX.Y.Z`           | `unbound1.26.2`     | You want an exact Unbound release          |
 | `unboundX.Y-VERSION`     | `unbound1.26-4.0.3` | You want to pin both                       |
 
+A new `MAJOR` version means a breaking change. Before moving to one, read the [changelog](CHANGELOG.md), where each breaking change is marked **Breaking**.
+
 ## Configuration
 
 ### Ports
