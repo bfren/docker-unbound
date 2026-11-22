@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - README: an example of adding your own Unbound settings.
+- The Pi-hole compose examples use Pi-hole v6's variables - `PIHOLE_DNS_` and `WEBPASSWORD` were ignored, so Pi-hole did
+  not use Unbound and had no admin password. The `/etc/dnsmasq.d` volume, which Pi-hole v6 doesn't read, is removed, and
+  Docker Compose now refuses to start until `PIHOLE_ADMIN_PASSWORD` is set, because Pi-hole v6 turns the login off when
+  it is empty.
+- `docker-compose-with-proxy.yml` uses [Caddy Proxy](https://github.com/bfren/docker-caddy-proxy) instead of the
+  replaced nginx-proxy, and the backup Unbound is pinned to 4.0.2 instead of 3.1.10.
+- `docker-compose-pi-hole-default.yml` and `docker-compose-unbound-default.yml` could not be parsed - they are repaired
+  and updated in the same way, and the README now says what each one is for.
 
 ## [4.0.2] - 2026-11-10
 

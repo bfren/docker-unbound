@@ -9,6 +9,7 @@ x-restart: &restart
 #======================================================================================================================
 x-common-env: &common
   TZ: ${TIMEZONE}
+  BF_TZ: ${TIMEZONE}
 
 #======================================================================================================================
 # Unbound environment variables.
@@ -76,27 +77,27 @@ x-unbound-env: &unbound
 #======================================================================================================================
 # Pi-hole environment variables.
 #======================================================================================================================
+#  - Pi-hole v6 takes upstream servers by IP address, so these are the Unbound containers' fixed addresses
 x-pihole-env: &pihole
-  PIHOLE_DNS_: unbound;unbound-backup
-  VIRTUAL_HOST: ${PIHOLE_HOST_NAME}
-  WEBPASSWORD: ${PIHOLE_ADMIN_PASSWORD}
+  FTLCONF_dns_upstreams: ${IP_RANGE}.2;${IP_RANGE}.200
+  FTLCONF_webserver_api_password: ${PIHOLE_ADMIN_PASSWORD:?set PIHOLE_ADMIN_PASSWORD in .env - an empty password turns the login off}
 
 #======================================================================================================================
 # Proxy server environment variables.
 #======================================================================================================================
 x-proxy-env: &proxy
-  PROXY_AUTO_PRIMARY: ${PIHOLE_DOMAIN}
-  PROXY_AUTO_UPSTREAM: http://pihole
-  PROXY_DOMAIN: ${PROXY_DOMAIN}
-  PROXY_LETS_ENCRYPT_EMAIL: ${PROXY_LETS_ENCRYPT_EMAIL}
-  PROXY_LETS_ENCRYPT_LIVE: ${PROXY_LETS_ENCRYPT_LIVE}
+  BF_PROXY_AUTO_PRIMARY: ${PIHOLE_DOMAIN}
+  BF_PROXY_AUTO_UPSTREAM: http://pihole:80
+  BF_PROXY_DOMAIN: ${PROXY_DOMAIN}
+  BF_PROXY_LETS_ENCRYPT_EMAIL: ${PROXY_LETS_ENCRYPT_EMAIL}
+  BF_PROXY_LETS_ENCRYPT_LIVE: ${PROXY_LETS_ENCRYPT_LIVE}
 
 #======================================================================================================================
 # Service definitions.
 #======================================================================================================================
 services:
   unbound:
-    image: bfren/unbound:latest
+    image: quay.io/bfren/unbound:4.0
     container_name: unbound
     <<: *restart
     environment:
@@ -106,7 +107,7 @@ services:
         ipv4_address: ${IP_RANGE}.2
 
   unbound-backup:
-    image: bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
+    image: quay.io/bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
     container_name: unbound-backup
     <<: *restart
     environment:
@@ -118,6 +119,7 @@ services:
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
+    hostname: ${PIHOLE_HOST_NAME}
     depends_on:
       - unbound
       - unbound-backup
@@ -129,13 +131,12 @@ services:
       <<: [*common, *pihole]
     volumes:
       - ./v/pihole:/etc/pihole
-      - ./v/dnsmasq:/etc/dnsmasq.d
     networks:
       dns:
         ipv4_address: ${IP_RANGE}.3
 
   proxy:
-    image: bfren/nginx-proxy:7
+    image: quay.io/bfren/caddy-proxy:2.0
     container_name: proxy
     depends_on:
       - pihole
@@ -143,6 +144,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"
     environment:
       <<: [*common, *proxy]
     volumes:

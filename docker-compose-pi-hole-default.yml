@@ -9,6 +9,7 @@ x-restart: &restart
 #======================================================================================================================
 x-common-env: &common
   TZ: ${TIMEZONE}
+  BF_TZ: ${TIMEZONE}
 
 #======================================================================================================================
 # Unbound environment variables.
@@ -76,17 +77,17 @@ x-unbound-env: &unbound
 #======================================================================================================================
 # Pi-hole environment variables.
 #======================================================================================================================
+#  - Pi-hole v6 takes upstream servers by IP address, so these are the Unbound containers' fixed addresses
 x-pihole-env: &pihole
-  PIHOLE_DNS_: unbound;unbound-backup
-  VIRTUAL_HOST: ${PIHOLE_HOST_NAME}
-  WEBPASSWORD: ${PIHOLE_ADMIN_PASSWORD}
+  FTLCONF_dns_upstreams: ${IP_RANGE}.2;${IP_RANGE}.200
+  FTLCONF_webserver_api_password: ${PIHOLE_ADMIN_PASSWORD:?set PIHOLE_ADMIN_PASSWORD in .env - an empty password turns the login off}
 
 #======================================================================================================================
 # Service definitions.
 #======================================================================================================================
 services:
   unbound:
-    image: bfren/unbound:latest
+    image: quay.io/bfren/unbound:4.0
     container_name: unbound
     <<: *restart
     environment:
@@ -96,10 +97,9 @@ services:
         ipv4_address: ${IP_RANGE}.2
 
   unbound-backup:
-    image: bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
+    image: quay.io/bfren/unbound:${UNBOUND_PIN} # suggest updating this pinned version manually after each release
     container_name: unbound-backup
     <<: *restart
-    <<: *ports
     environment:
       <<: [*common, *unbound]
     networks:
@@ -109,6 +109,7 @@ services:
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
+    hostname: ${PIHOLE_HOST_NAME}
     depends_on:
       - unbound
       - unbound-backup
@@ -121,7 +122,6 @@ services:
       <<: [*common, *pihole]
     volumes:
       - ./v/pihole:/etc/pihole
-      - ./v/dnsmasq:/etc/dnsmasq.d
     networks:
       dns:
         ipv4_address: ${IP_RANGE}.3
