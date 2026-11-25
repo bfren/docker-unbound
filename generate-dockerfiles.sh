@@ -4,13 +4,13 @@ set -euo pipefail
 
 docker pull bfren/alpine
 
-BASE_VERSION="7.0.2"
+BASE_VERSION="7.0.3"
 echo "Base: ${BASE_VERSION}"
 
 # Alpine edition must match the one bfren-bin/unbound is compiled against
 ALPINE_EDITION="3.24"
 UNBOUND_REVISION=`cat ./overlay/tmp/UNBOUND_REVISION`
-UNBOUND_BUILD="261106.3"
+UNBOUND_BUILD="261125"
 echo "Unbound ${UNBOUND_REVISION} for Alpine ${ALPINE_EDITION}"
 
 DOCKERFILE=$(docker run \

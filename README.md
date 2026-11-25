@@ -28,7 +28,7 @@ Run `docker compose up -d`, then test it from the host:
 dig example.com @127.0.0.1
 ```
 
-`docker-compose.yml` in this repository runs Pi-hole with two Unbound containers, and `docker-compose-with-proxy.yml` puts Pi-hole's admin site behind a proxy. Copy `.env` alongside them and change the values.
+`docker-compose.yml` in this repository runs Pi-hole with two Unbound containers, and `docker-compose-with-proxy.yml` puts Pi-hole's admin site behind a proxy. Copy `.env` alongside them and change the values - Pi-hole won't start until `PIHOLE_ADMIN_PASSWORD` is set. For a different starting point, `docker-compose-pi-hole-default.yml` uses the Unbound settings from [Pi-hole's guide](https://docs.pi-hole.net/guides/dns/unbound/), and `docker-compose-unbound-default.yml` uses Unbound's own defaults.
 
 ## Features
 
@@ -49,10 +49,12 @@ Images are published to Docker Hub (`bfren/unbound`) and Quay.io (`quay.io/bfren
 | `latest`                 |                     | You always want the newest image           |
 | `MAJOR`                  | `4`                 | You want updates, but not breaking changes |
 | `MINOR`                  | `4.0`               | You want fixes only - **recommended**      |
-| `VERSION`                | `4.0.2`             | You want to pin this image exactly         |
+| `VERSION`                | `4.0.3`             | You want to pin this image exactly         |
 | `unboundX`, `unboundX.Y` | `unbound1.26`       | You want an Unbound version                |
 | `unboundX.Y.Z`           | `unbound1.26.2`     | You want an exact Unbound release          |
-| `unboundX.Y-VERSION`     | `unbound1.26-4.0.2` | You want to pin both                       |
+| `unboundX.Y-VERSION`     | `unbound1.26-4.0.3` | You want to pin both                       |
+
+A new `MAJOR` version means a breaking change. Before moving to one, read the [changelog](CHANGELOG.md), where each breaking change is marked **Breaking**.
 
 ## Configuration
 
@@ -175,7 +177,13 @@ So DNS keeps working while one restarts or updates. Pin the second one to an old
 
 ### Can I add my own Unbound settings?
 
-`unbound.conf` includes every `*.conf` file in `/etc/unbound/unbound.conf.d`, so mount your own files there.
+`unbound.conf` includes every `*.conf` file in `/etc/unbound/unbound.conf.d`, so mount your own files there. Each file must name the section its settings belong to:
+
+```plain
+# /etc/unbound/unbound.conf.d/local.conf
+server:
+    local-data: "nas.home. A 192.168.1.20"
+```
 
 ## Licence
 
